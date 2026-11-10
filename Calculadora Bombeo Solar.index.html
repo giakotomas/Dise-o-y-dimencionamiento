@@ -1,0 +1,1095 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Calculadora de Bombeo Solar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: ficha técnica. Formulario a la izquierda, placa de características con resultados a la derecha. */
+:root{
+  --bg:#F4F8F2; --surface:#FFFFFF; --surface2:#E6EEE8; --ink:#12252A; --muted:#566B71; --line:#C4D0D3;
+  --accent:#0B6B86; --accent-ink:#FFFFFF; --sun:#B97900; --sky:#BFE3F5; --sky2:#FFE9C2; --wave:#1E9AC0; --wave2:#3E9B5F; --drop:#1E9AC0; --leaf:#2F8A52; --sunc:#E8932B; --aqua:#1E9AC0; --coral:#D9684F; --head1:#0B6B86; --head2:#1B8F73; --head-ink:#FFFFFF; --cta:#0F7A5A; --cta-ink:#FFFFFF;
+  --ok:#17724A; --okbg:#DDF1E6; --warn:#8F5200; --warnbg:#FBEBCF; --bad:#A8211A; --badbg:#F9DEDB; --infobg:#E1E8EA;
+  --f-display:'Barlow Condensed','Arial Narrow',sans-serif; --f-body:'Barlow',system-ui,sans-serif; --f-mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1A1E; --surface:#152329; --surface2:#1C2E35; --ink:#E4EEF0; --muted:#97AEB5; --line:#2B4048;
+  --accent:#4FB8D6; --accent-ink:#06222B; --sun:#E5A62B; --sky:#123A52; --sky2:#3A2B1E; --wave:#4FB8D6; --wave2:#58C690; --drop:#4FB8D6; --leaf:#58C690; --sunc:#F0AE4A; --aqua:#4FB8D6; --coral:#F08A72; --head1:#12485E; --head2:#14513F; --head-ink:#EAF6F8; --cta:#58C690; --cta-ink:#06221A;
+  --ok:#58C690; --okbg:#143323; --warn:#E9B25D; --warnbg:#3A2A10; --bad:#F08A82; --badbg:#3E1A17; --infobg:#1F3037; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1A1E; --surface:#152329; --surface2:#1C2E35; --ink:#E4EEF0; --muted:#97AEB5; --line:#2B4048;
+  --accent:#4FB8D6; --accent-ink:#06222B; --sun:#E5A62B; --sky:#123A52; --sky2:#3A2B1E; --wave:#4FB8D6; --wave2:#58C690; --drop:#4FB8D6; --leaf:#58C690; --sunc:#F0AE4A; --aqua:#4FB8D6; --coral:#F08A72; --head1:#12485E; --head2:#14513F; --head-ink:#EAF6F8; --cta:#58C690; --cta-ink:#06221A;
+  --ok:#58C690; --okbg:#143323; --warn:#E9B25D; --warnbg:#3A2A10; --bad:#F08A82; --badbg:#3E1A17; --infobg:#1F3037; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;letter-spacing:.01em;margin:0;text-wrap:balance}
+h1{font-size:2.1rem;line-height:1.05}
+h2{font-size:1.35rem}
+h3{font-size:1.05rem;text-transform:uppercase;letter-spacing:.08em;color:var(--leaf)}
+p{margin:0 0 .6em}
+a{color:var(--accent)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+header.top{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:end;justify-content:space-between;border-bottom:4px solid transparent;border-image:linear-gradient(90deg,var(--aqua),var(--leaf),var(--sunc)) 1;padding-bottom:12px;margin-bottom:14px}
+header.top p{color:var(--muted);margin:0;max-width:46ch}
+.stamp{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);text-align:right}
+nav.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px}
+nav.tabs button{font:600 .95rem var(--f-body);background:transparent;color:var(--muted);border:1px solid var(--line);padding:8px 14px;cursor:pointer;border-radius:3px}
+nav.tabs button{background:var(--surface)}
+nav.tabs button[aria-selected="true"]{background:var(--head1);color:var(--head-ink);border-color:var(--head1)}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cols{display:grid;grid-template-columns:minmax(0,23rem) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:880px){.cols{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);padding:16px;border-radius:3px}
+.card + .card{margin-top:16px}
+.card{border-top:4px solid var(--aqua)}
+.stack>.card:nth-child(2),.two>.card:nth-child(2){border-top-color:var(--leaf)}
+.stack>.card:nth-child(3),.two>.card:nth-child(3){border-top-color:var(--sunc)}
+.stack>.card:nth-child(4),.two>.card:nth-child(4){border-top-color:var(--coral)}
+.metric:nth-child(4n+1){box-shadow:inset 3px 0 var(--aqua)}.metric:nth-child(4n+2){box-shadow:inset 3px 0 var(--leaf)}.metric:nth-child(4n+3){box-shadow:inset 3px 0 var(--sunc)}.metric:nth-child(4n){box-shadow:inset 3px 0 var(--coral)}
+legend{color:var(--head1)}
+#bg .drop:nth-child(3n+4){background:var(--leaf)}#bg .drop:nth-child(5n+6){background:var(--sunc)}
+.stack{display:flex;flex-direction:column;gap:14px;min-width:0}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{font-family:var(--f-display);font-weight:700;font-size:1.1rem;padding:0;margin-bottom:8px}
+label{display:block;font-weight:500;font-size:.88rem;margin-bottom:3px}
+.hint{font-size:.78rem;color:var(--muted);font-weight:400}
+input,select{width:100%;font:500 .95rem var(--f-mono);background:var(--bg);color:var(--ink);border:1px solid var(--line);padding:8px 9px;border-radius:3px;min-width:0}
+select{font-family:var(--f-body)}
+.f{margin-bottom:10px}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.btn{font:600 .92rem var(--f-body);padding:10px 14px;border-radius:3px;border:1px solid var(--ink);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.primary{background:var(--cta);border-color:var(--cta);color:var(--cta-ink)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+details.adv{border:1px dashed var(--line);padding:10px 12px;border-radius:3px}
+details.adv summary{cursor:pointer;font-weight:600}
+.check{display:flex;gap:8px;align-items:flex-start;font-weight:500}
+.check input{width:auto;margin-top:4px}
+.plate{border:2px solid var(--head1);background:var(--surface);padding:0;border-radius:3px}
+.plate-h{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between;align-items:baseline;background:linear-gradient(90deg,var(--head1),var(--head2));color:var(--head-ink);padding:10px 14px}
+.plate-h h2{color:var(--head-ink)}
+.plate-h .mono{font-size:.8rem}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));background:var(--surface);border-bottom:1px solid var(--line)}
+.metric{background:var(--surface);padding:10px 12px;min-width:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 -1px -1px 0}
+.metric .k{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.metric .v{font-family:var(--f-mono);font-size:1.25rem;font-weight:500;overflow-wrap:anywhere}
+.metric .u{font-size:.78rem;color:var(--muted);font-family:var(--f-mono)}
+.sec{padding:14px}
+.sec + .sec{border-top:1px solid var(--line)}
+.verdict{display:flex;gap:10px;align-items:center;padding:10px 12px;border-left:6px solid;margin-bottom:12px;font-weight:600}
+.verdict.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+.verdict.warn{background:var(--warnbg);border-color:var(--warn);color:var(--warn)}
+.verdict.bad{background:var(--badbg);border-color:var(--bad);color:var(--bad)}
+.scroll{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);white-space:nowrap}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tfoot td{font-weight:700;border-top:2px solid var(--ink);border-bottom:0}
+.chip{display:inline-block;font:600 .68rem var(--f-mono);letter-spacing:.05em;padding:2px 6px;border-radius:2px;white-space:nowrap}
+.chip.ok{background:var(--okbg);color:var(--ok)} .chip.warn{background:var(--warnbg);color:var(--warn)}
+.chip.bad{background:var(--badbg);color:var(--bad)} .chip.info{background:var(--infobg);color:var(--muted)}
+.checks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.checks li{display:grid;grid-template-columns:6.4rem minmax(0,1fr);gap:10px;align-items:start}
+.checks .t{font-weight:600}
+.checks .d{font-size:.84rem;color:var(--muted)}
+.checks .r{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+.alt{font-size:.86rem}
+.note{font-size:.82rem;color:var(--muted)}
+.msg{padding:14px;border:1px dashed var(--line);color:var(--muted)}
+.kbd{font-family:var(--f-mono);background:var(--surface2);padding:1px 5px;border-radius:2px;font-size:.86em}
+.pane[hidden]{display:none}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));gap:16px}
+.two > *{min-width:0}
+.tag{font-family:var(--f-mono);font-size:.7rem;color:var(--muted)}
+ul.plain{margin:0 0 .8em;padding-left:1.1em}
+ul.plain li{margin-bottom:.3em}
+.foot{margin-top:26px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.code{font-family:var(--f-mono);font-size:1rem;background:var(--surface2);padding:8px 10px;border-radius:3px;display:block;margin:6px 0 8px;overflow-wrap:anywhere}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 38%,var(--bg) 75%)}
+#bg .sun{position:absolute;left:0;top:0;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,var(--sun) 0 28%,transparent 70%);opacity:.5;will-change:transform}
+#bg .drop{position:absolute;left:0;top:0;width:9px;height:13px;border-radius:50% 50% 50% 50%/65% 65% 35% 35%;background:var(--drop);opacity:.3;will-change:transform}
+#bg svg{position:absolute;left:0;bottom:0;width:200%;height:42vh;will-change:transform}
+#bg .w1{opacity:.22;fill:var(--wave)} #bg .w2{opacity:.18;fill:var(--wave2)}
+#bg .wv{position:absolute;left:0;bottom:0;width:100%;height:42vh;will-change:transform}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+#bg .w1{animation:drift 26s linear infinite} #bg .w2{animation:drift 38s linear infinite reverse}
+.wrap{position:relative;z-index:1}
+@media (prefers-reduced-motion:reduce){#bg .w1,#bg .w2{animation:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---- Refinamiento visual ---- */
+.card{--cardc:var(--aqua);border-radius:12px;border-top-color:var(--cardc);box-shadow:0 1px 2px rgba(10,40,50,.06),0 8px 24px -12px rgba(10,40,50,.25);overflow:hidden}
+.stack>.card:nth-child(2),.two>.card:nth-child(2){--cardc:var(--leaf)}
+.stack>.card:nth-child(3),.two>.card:nth-child(3){--cardc:var(--sunc)}
+.stack>.card:nth-child(4),.two>.card:nth-child(4){--cardc:var(--coral)}
+legend{float:left;width:calc(100% + 32px);margin:-16px -16px 14px;padding:11px 16px;font-size:1.4rem;line-height:1.1;color:var(--ink);
+  background:color-mix(in srgb,var(--cardc) 18%,var(--surface));border-bottom:2px solid var(--cardc);display:flex;align-items:center;gap:10px}
+legend::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--cardc);box-shadow:0 0 0 4px color-mix(in srgb,var(--cardc) 28%,transparent);flex:none}
+fieldset>*:not(legend){clear:both}
+.card>h2:first-child{margin:-16px -16px 14px;padding:11px 16px;font-size:1.5rem;line-height:1.1;color:var(--ink);
+  background:color-mix(in srgb,var(--cardc) 18%,var(--surface));border-bottom:2px solid var(--cardc);display:flex;align-items:center;gap:10px}
+.card>h2:first-child::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--cardc);box-shadow:0 0 0 4px color-mix(in srgb,var(--cardc) 28%,transparent);flex:none}
+.card h3{display:inline-block;color:var(--ink);font-size:.95rem;padding:3px 10px;border-radius:999px;background:color-mix(in srgb,var(--cardc) 22%,var(--surface))}
+.sec>h3{background:color-mix(in srgb,var(--leaf) 22%,var(--surface))}
+h1{font-size:2.5rem;background:linear-gradient(90deg,var(--accent),var(--leaf));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;width:fit-content;max-width:100%}
+header.top p{font-size:1rem}
+input,select{border-radius:8px;border-width:1.5px;padding:9px 10px;transition:border-color .15s,box-shadow .15s}
+input:hover,select:hover{border-color:var(--accent)}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+label{font-weight:600}
+.btn{border-radius:10px;padding:11px 16px;transition:transform .12s,box-shadow .12s,background .12s}
+.btn:hover:not([disabled]){transform:translateY(-1px);box-shadow:0 6px 14px -6px rgba(10,40,50,.4)}
+.btn.primary{box-shadow:0 4px 12px -4px color-mix(in srgb,var(--cta) 60%,transparent)}
+nav.tabs{gap:6px}
+nav.tabs button{border-radius:999px;padding:9px 18px;transition:background .15s,transform .12s}
+nav.tabs button:hover{transform:translateY(-1px);border-color:var(--accent)}
+.plate{border-radius:12px;overflow:hidden;box-shadow:0 2px 4px rgba(10,40,50,.08),0 14px 34px -14px rgba(10,40,50,.4)}
+.plate-h{padding:14px 18px}
+.plate-h h2{font-size:1.7rem}
+.metric .v{font-size:1.5rem;font-weight:600}
+.metric:hover{background:color-mix(in srgb,var(--aqua) 8%,var(--surface))}
+.verdict{border-radius:8px;font-size:1.02rem}
+.chip{border-radius:999px;padding:3px 9px}
+.checks li{padding:8px 10px;border-radius:8px;background:color-mix(in srgb,var(--surface2) 45%,var(--surface))}
+tbody tr:hover td{background:color-mix(in srgb,var(--aqua) 8%,var(--surface))}
+tfoot tr:first-child td{font-size:1.05rem;color:var(--head1)}
+details.adv{border-radius:10px;border:1.5px dashed var(--leaf);background:color-mix(in srgb,var(--leaf) 6%,var(--surface))}
+details.adv summary{color:var(--leaf);font-size:1.05rem}
+.foot{text-align:center}
+
+/* ---- Versión más amigable ---- */
+.dd{margin:2px 0}.dd summary{cursor:pointer;font-size:.82rem;color:var(--accent);font-weight:600}
+.sec>h3{display:inline-block}
+body{font-size:16px;line-height:1.6}
+.wrap{max-width:1120px}
+.card{padding:20px}
+legend{width:calc(100% + 40px);margin:-20px -20px 16px;padding:13px 20px}
+.card>h2:first-child{margin:-20px -20px 16px;padding:13px 20px}
+.f{margin-bottom:14px}
+.cols{gap:28px}
+.hint{font-size:.82rem}
+form.stack{counter-reset:step}
+form .card legend::before{counter-increment:step;content:counter(step);width:28px;height:28px;border-radius:50%;background:var(--cardc);color:#fff;font:700 1rem var(--f-body);display:flex;align-items:center;justify-content:center;box-shadow:none;flex:none}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 24px;padding:20px 22px;background:linear-gradient(135deg,color-mix(in srgb,var(--aqua) 14%,var(--surface)),color-mix(in srgb,var(--leaf) 14%,var(--surface)));border-bottom:1px solid var(--line);align-items:center}
+@media (max-width:560px){.hero{grid-template-columns:minmax(0,1fr)}}
+.hero-k{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
+.hero-v{font-family:var(--f-display);font-size:1.7rem;line-height:1.1;font-weight:700;overflow-wrap:anywhere;margin:2px 0 4px}
+.hero-s{font-size:.95rem;color:var(--muted)}
+.hero-p{text-align:right}
+@media (max-width:560px){.hero-p{text-align:left}}
+.hero-n{font-family:var(--f-display);font-size:2.6rem;line-height:1;font-weight:700;color:var(--cta)}
+.okd{margin-top:14px;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--surface)}
+.okd summary{cursor:pointer;font-weight:600;color:var(--leaf)}
+.sec{padding:18px 20px}
+.plate-h{display:none}
+.metric .v{font-size:1.35rem}
+.checks{gap:10px}
+.checks li{padding:10px 12px}
+.btn{font-size:1rem;padding:12px 18px}
+nav.tabs button{font-size:1rem}
+
+/* ---- Propuestas y ayuda ---- */
+.props{display:flex;flex-wrap:wrap;gap:8px;padding:16px 20px 0}
+.prop{font:600 .9rem var(--f-body);display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-align:left;min-width:0}
+.prop b{font-family:var(--f-mono);font-weight:500;color:var(--muted);font-size:.85rem}
+.prop.on{border-color:var(--cta);background:color-mix(in srgb,var(--cta) 12%,var(--surface))}
+.prop.on b{color:var(--cta)}
+.qm{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font:700 .75rem var(--f-body);cursor:pointer;margin-left:6px;padding:0;vertical-align:middle}
+.helpbox{font-size:.86rem;background:color-mix(in srgb,var(--aqua) 12%,var(--surface));border-left:4px solid var(--aqua);padding:8px 10px;border-radius:6px;margin-top:6px}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<div id="bg" aria-hidden="true"><div class="sun" id="bgSun"></div><div class="wv" id="bgW1"><svg class="w1" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 60 Q150 20 300 60 T600 60 T900 60 T1200 60 V120 H0Z"/></svg></div><div class="wv" id="bgW2"><svg class="w2" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 70 Q150 100 300 70 T600 70 T900 70 T1200 70 V120 H0Z"/></svg></div></div>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Calculadora de Bombeo Solar</h1>
+      <p>Dimensiona el equipo con el método de cálculo estándar, elige materiales con precios de referencia en dólares y revisa cada componente contra criterios normativos.</p>
+    </div>
+    <div class="stamp">Precios relevados el 09/11/2026<br>USD 1 = ARS <span id="stampFx">1.560</span> (BNA, 02/11/2026)</div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Secciones">
+    <button role="tab" aria-selected="true" data-tab="calc">Calculadora</button>
+    <button role="tab" aria-selected="false" data-tab="db">Precios y modelos</button>
+    <button role="tab" aria-selected="false" data-tab="know">Método y normas</button>
+    <button role="tab" aria-selected="false" data-tab="src">Fuentes y alcance</button>
+  </nav>
+
+  <section class="pane" id="pane-calc">
+    <div class="cols">
+      <form class="stack" id="form" autocomplete="off" onsubmit="return false">
+        <div class="card">
+          <fieldset>
+            <legend>Ubicación y uso</legend>
+            <div class="f"><label for="prov">Provincia</label>
+              <select id="prov"></select>
+              <div class="hint" id="provHint"></div></div>
+            <div class="f"><label for="season">Época de diseño</label>
+              <select id="season">
+                <option value="anual">Promedio anual</option>
+                <option value="inv">Mes más desfavorable (invierno)</option>
+              </select></div>
+            <div class="f"><label for="vol">Agua necesaria por día <span class="hint">(litros)</span></label>
+              <input id="vol" type="number" inputmode="decimal" min="50" step="50" value="4500"></div>
+            <div class="row2">
+              <div class="f"><label for="qt">Caudal objetivo <span class="hint">(m³/h, vacío = calcular)</span></label><input id="qt" type="number" inputmode="decimal" min="0" step="0.05" placeholder="calculado"></div>
+              <div class="f"><label for="hspManual">Horas sol pico <span class="hint">(h/día, vacío = tabla)</span></label><input id="hspManual" type="number" inputmode="decimal" min="0" step="0.1" placeholder="tabla"></div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="card">
+          <fieldset>
+            <legend>Pozo y cañería</legend>
+            <div class="row2">
+              <div class="f"><label for="st">Nivel dinámico <span class="hint">(m, con el pozo bombeando)</span></label><input id="st" type="number" inputmode="decimal" min="0" step="1" value="22"></div>
+              <div class="f"><label for="dh">Altura de descarga <span class="hint">(m sobre el suelo)</span></label><input id="dh" type="number" inputmode="decimal" min="0" step="1" value="3"></div>
+              <div class="f"><label for="horiz">Cañería horizontal <span class="hint">(m)</span></label><input id="horiz" type="number" inputmode="decimal" min="0" step="1" value="20"></div>
+            </div>
+            <div class="row2">
+              <div class="f"><label for="diam">Diámetro interno cañería</label>
+                <select id="diam"><option value="auto" selected>Automático</option><option value="20">20 mm</option><option value="25">25 mm</option><option value="32">32 mm</option><option value="40">40 mm</option><option value="50">50 mm</option><option value="63">63 mm</option></select></div>
+              <div class="f"><label for="dist">Paneles a controlador <span class="hint">(m)</span></label><input id="dist" type="number" inputmode="decimal" min="1" step="1" value="10"></div>
+            </div>
+            <p class="note">Valores de ejemplo. Reemplazalos por los datos de tu pozo.</p>
+          </fieldset>
+        </div>
+        <div class="card">
+          <fieldset>
+            <legend>Controlador y agua</legend>
+            <div class="f"><label for="ctrl">Tipo de controlador</label>
+              <select id="ctrl">
+                <option value="cc">CC: solo paneles, con tanque de almacenamiento</option>
+                <option value="cac">CA/CC: paneles más red o generador de respaldo</option>
+              </select></div>
+            <div class="f"><label for="water">Calidad del agua</label>
+              <select id="water">
+                <option value="limpia">Limpia</option>
+                <option value="sucia">Con arena, partículas o agua dura</option>
+              </select></div>
+          </fieldset>
+        </div>
+
+        <details class="adv" id="adv">
+          <summary>Opciones avanzadas</summary>
+          <div style="margin-top:12px">
+            <label class="check"><input type="checkbox" id="manual"> Elegir los componentes manualmente</label>
+            <div id="manualBox" hidden style="margin-top:10px">
+              <div class="f"><label for="mp">Bomba o kit</label><select id="mp"></select></div>
+              <div id="mcodeBox" hidden class="f">
+                <label for="mcode">Código de la bomba <span class="hint">(caudal m³/h, altura m, voltaje, potencia)</span></label>
+                <input id="mcode" type="text" value="HD-3SS 1.5-75-36-210" spellcheck="false">
+                <div class="hint" id="mcodeHint"></div>
+              </div>
+              <div id="mpvBox">
+                <div class="f"><label for="mpanel">Módulo fotovoltaico</label><select id="mpanel"></select></div>
+                <div class="row2">
+                  <div class="f"><label for="mnS">Módulos en serie</label><input id="mnS" type="number" min="1" step="1" value="1"></div>
+                  <div class="f"><label for="mnP">Series en paralelo</label><input id="mnP" type="number" min="1" step="1" value="1"></div>
+                </div>
+              </div>
+              <p class="note">La verificación normativa se aplica igual a lo que elijas.</p>
+            </div>
+            <h3 style="margin:14px 0 8px">Parámetros de cálculo</h3>
+            <div class="row2">
+              <div class="f"><label for="over">Sobredimensionado solar <span class="hint">(× potencia bomba)</span></label><input id="over" type="number" min="1" max="3" step="0.1" value="1.5"></div>
+              <div class="f"><label for="tmin">Temperatura mínima de diseño <span class="hint">(°C, para el Voc en frío; valor orientativo por región, ajustalo con el dato de tu zona)</span></label><input id="tmin" type="number" min="-40" max="25" step="1" value="0"></div>
+              <div class="f"><label for="auton">Autonomía del tanque <span class="hint">(días)</span></label><input id="auton" type="number" min="0.5" max="7" step="0.5" value="1"></div>
+              <div class="f"><label for="chw">Rugosidad Hazen-Williams C</label><input id="chw" type="number" min="80" max="160" step="5" value="140"></div>
+              <div class="f"><label for="pf">Factor de precio local <span class="hint">(paneles, cables, estructura)</span></label><input id="pf" type="number" min="0.5" max="3" step="0.05" value="1"></div>
+              <div class="f"><label for="arsr">Cotización ARS por USD</label><input id="arsr" type="number" min="1" step="1" value="1560"></div>
+            </div>
+            <div class="f"><label for="wa">WhatsApp de destino <span class="hint">(con código de país, sin +; vacío = elegir contacto)</span></label><input id="wa" type="tel" inputmode="numeric" placeholder="5491122334455"></div>
+            <h3 style="margin:14px 0 8px">Datos del presupuesto</h3>
+            <div class="row2">
+              <div class="f"><label for="cli">Cliente</label><input id="cli" type="text" maxlength="60" placeholder="Nombre"></div>
+              <div class="f"><label for="obra">Obra o ubicación</label><input id="obra" type="text" maxlength="60" placeholder="Ej.: Finca La Esperanza"></div>
+              <div class="f"><label for="inst">Instalador o empresa</label><input id="inst" type="text" maxlength="60"></div>
+              <div class="f"><label for="valid">Validez <span class="hint">(días)</span></label><input id="valid" type="number" min="1" step="1" value="7"></div>
+            </div>
+          </div>
+        </details>
+      </form>
+
+      <div class="stack" id="out" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="pane" id="pane-db" hidden>
+    <div class="stack" id="dbOut"></div>
+  </section>
+
+  <section class="pane" id="pane-know" hidden>
+    <div class="two">
+      <div class="card">
+        <h2>Método de cálculo</h2>
+        <ul class="plain">
+          <li><strong>Cuatro datos para elegir bomba</strong>: caudal (L/h o L/día), profundidad del agua (altura manométrica: distancia vertical entre el nivel del agua y la superficie), voltaje de trabajo (12, 24, 36 o 48 V) y potencia necesaria (W).</li>
+          <li><strong>Potencia solar</strong>: se instala un 50% más que lo que pide la bomba. Ejemplo: 210 W × 1,5 = 315 W.</li>
+          <li><strong>Horas de bombeo</strong>: litros por día ÷ caudal por hora. Ejemplo: 4.500 L/día con una bomba de 1.500 L/h son 3 horas. Deben caber dentro de las HSP (horas sol pico).</li>
+          <li><strong>Punto de trabajo óptimo</strong>: un punto intermedio de la curva, ni el caudal máximo ni la altura máxima. Ejemplo: 0,8 a 1,0 m³/h a 20 o 25 m.</li>
+          <li><strong>Controlador CC</strong>: funciona solo con paneles, sin baterías ni red. La bomba trabaja de día, por eso conviene un tanque de almacenamiento.</li>
+          <li><strong>Controlador CA/CC</strong>: además de paneles admite red o generador, para días muy nublados o bombeo nocturno. No inyecta energía a la red.</li>
+          <li><strong>Vida útil</strong>: las bombas duran de 10 a 15 años. La acortan el agua de mala calidad, las partículas, el agua dura y el funcionamiento en seco. Los sensores de protección detienen el motor si falta agua.</li>
+        </ul>
+        <h3 style="margin:12px 0 6px">Leer el código de una bomba</h3>
+        <span class="code">HD-3SS 1.5-75-36-210</span>
+        <ul class="plain">
+          <li><strong>1.5</strong>: caudal, 1,5 m³/h (1.500 L/h)</li>
+          <li><strong>75</strong>: profundidad máxima de bombeo, 75 m</li>
+          <li><strong>36</strong>: voltaje de trabajo, 36 V</li>
+          <li><strong>210</strong>: potencia, 210 W</li>
+        </ul>
+        <p class="note">En Opciones avanzadas podés escribir cualquier código con este formato y la app arma la bomba.</p>
+      </div>
+      <div class="card">
+        <h2>Cómo usa la app el método</h2>
+        <ul class="plain">
+          <li><strong>Curva de la bomba</strong>: la bomba entrega más o menos agua según la profundidad. La app calcula el caudal en tu altura de trabajo. Para la bomba Handuro usa la curva de la hoja 124; para las demás supone una recta entre el caudal máximo y la altura máxima.</li>
+          <li><strong>Ejemplo</strong>: la Handuro HD-2SS 1.5-75-36-210 rinde cerca de 0,8 m³/h a 25 m, no 1,5. Para 4.500 L/día necesita unas 5,6 horas, no 3. El cálculo de 3 horas vale solo con el caudal máximo.</li>
+          <li><strong>Altura (CDT)</strong>: el cálculo básico usa la profundidad. La app suma también la altura de descarga y la fricción de la cañería: <span class="kbd">hf = 10,67·L·Q^1,852 / (C^1,852·D^4,87)</span>.</li>
+          <li><strong>Punto de trabajo</strong>: se marca REVISAR si el caudal queda fuera de 40 a 85% del máximo o la altura fuera de 20 a 80% del máximo. Son límites orientativos de la app, no de una norma.</li>
+          <li><strong>Potencia solar</strong>: 1,5 × la potencia de la bomba, o el mínimo del fabricante si es mayor.</li>
+          <li><strong>Tanque</strong>: litros por día × días de autonomía. No hay un valor normativo; con 1 día se cubre la noche.</li>
+          <li><strong>Voc en frío</strong>: Voc × módulos en serie × 1,15. Debe quedar bajo el máximo del controlador y bajo 1000 V.</li>
+          <li><strong>Cable</strong>: S = 2·L·I·ρ / (caída × V), con ρ del cobre a 70 °C ≈ 0,0214 Ω·mm²/m.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Normas usadas en la verificación</h2>
+        <table>
+          <thead><tr><th>Norma</th><th>Qué se revisa</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td>IEC 60364-7-712 (FV)</td><td>Seccionador DC, SPD tipo 2, puesta a tierra, cable PV, tensión 1000 V</td><td><span class="chip warn">SUMARIO</span></td></tr>
+            <tr><td>AEA 90364-7-712</td><td>Equivalente argentino de la anterior</td><td><span class="chip bad">NO CONSULTADA</span></td></tr>
+            <tr><td>IEC 62548</td><td>Diseño de arreglos: Voc en frío, Isc × 1,25</td><td><span class="chip warn">PARCIAL</span></td></tr>
+            <tr><td>IEC 60947-3</td><td>Seccionadores DC (figura en la ficha del producto de referencia)</td><td><span class="chip ok">FICHA</span></td></tr>
+          </tbody>
+        </table>
+        <p class="note" style="margin-top:8px">Los criterios de IEC 60364-7-712 vienen de un resumen secundario (NEN-Hub) que declara no estar revisado técnicamente. Los textos de las normas son de pago y no se leyeron. Confirmá cada valor contra la edición vigente de la AEA antes de ejecutar la obra.</p>
+      </div>
+      <div class="card">
+        <h2>Datos externos recomendados</h2>
+        <p>Para ajustar la radiación de tu zona con precisión, consultá una de estas fuentes y cargá el resultado en “Horas sol pico”:</p>
+        <ul class="plain">
+          <li><a href="https://globalsolaratlas.info" target="_blank" rel="noopener">Global Solar Atlas</a></li>
+          <li><a href="https://power.larc.nasa.gov/data-access-viewer/" target="_blank" rel="noopener">NASA POWER</a></li>
+          <li><a href="https://re.jrc.ec.europa.eu/pvg_tools/es/" target="_blank" rel="noopener">PVGIS (Comisión Europea)</a></li>
+        </ul>
+        <p class="note">El Atlas de Energía Solar de la Argentina entrega mapas con isolíneas cada 0,5 kWh/m²·día e incertidumbre cercana al 10%.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pane" id="pane-src" hidden>
+    <div class="stack" id="srcOut"></div>
+  </section>
+
+  <p class="foot">Herramienta de apoyo técnico. Los precios son referenciales, vienen de tiendas públicas y pueden haber cambiado. El diseño final y la ejecución requieren un profesional matriculado.</p>
+</div>
+
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const FX={ars:1560,eur:1.138,gbp:1.332};
+const COLD=1.15, RHO=0.0214, WINTER=0.69, ETA_AC=0.45, PV_USD_W=0.26, STRUCT_USD=79.82;
+
+/* ---------- Datos ---------- */
+const TMIN={cuyo:-4,noa:-3,nea:2,pampa:-3,patn:-8,pats:-12,centro:-4};
+const REGIONS={cuyo:{n:'Cuyo',lo:5.0,hi:5.5},noa:{n:'NOA',lo:4.5,hi:5.0},nea:{n:'NEA',lo:4.0,hi:4.5},pampa:{n:'Pampa Húmeda',lo:3.8,hi:4.2},
+  patn:{n:'Patagonia Norte',lo:4.0,hi:4.5},pats:{n:'Patagonia Sur',lo:3.0,hi:3.5},centro:{n:'Centro-Oeste',lo:4.2,hi:4.8}};
+const PROV=[['Mendoza','cuyo'],['San Juan','cuyo'],['San Luis','cuyo'],['Salta','noa'],['Jujuy','noa'],['Catamarca','noa'],['La Rioja','noa'],
+ ['Tucumán','noa',1],['Santiago del Estero','noa',1],['Corrientes','nea'],['Misiones','nea'],['Chaco','nea'],['Formosa','nea'],
+ ['Buenos Aires','pampa'],['Santa Fe','pampa'],['Entre Ríos','pampa'],['Neuquén','patn'],['Río Negro','patn'],['Chubut','pats',1],
+ ['Santa Cruz','pats'],['Tierra del Fuego','pats'],['Córdoba','centro'],['La Pampa','centro'],['Otra ubicación (ingresar horas sol pico)',null]];
+
+const EN='https://enertik.com/ar/tienda/bombeo-solar/bombas-solares/sumergibles/';
+const AGE='09/11/2026';
+function mz(id,model,kind,q,h,pW,vnom,p,stock,slug,x){ return Object.assign({id:id,brand:'Mizu',model:model,kind:kind,pW:pW,vnom:vnom,q:q,h:h,p:p,stock:stock,win:null,minS:null,age:AGE,conf:'alta',url:EN+slug+'/'},x||{}); }
+const PUMPS=[
+ {id:'h1',brand:'Handuro',model:'HD-2SS 1.5-75-36-210',kind:'Sumergible 2"',pW:210,vnom:36,q:1.55,h:54,curve:[[0,54],[0.3,52.5],[0.45,33],[0.6,28],[0.75,26.5],[0.85,24],[0.96,22.75],[1.2,14],[1.55,0]],p:null,stock:'sin dato',win:{vmin:30,vmax:50},minS:300,age:'ficha propia',conf:'sin precio',url:null,
+   note:'La ficha de la bomba indica 75 m de profundidad máxima, pero su gráfica llega a 54 m. La app usa la gráfica, que es la más exigente. Los puntos de la curva se leyeron a ojo de la imagen.'},
+ mz('p1','MSS3-1.2-56-120-24V','Tornillo 3"',1.2,56,120,24,497200,'disponible','bomba-solar-sumergible-centrifuga-q1-2-56m-120w-24v',{win:{vmin:30,vmax:50},minS:250}),
+ mz('p2','MSS3-1.2-77-210-36V','Tornillo 3"',1.2,77,210,36,502700,'disponible','bomba-solar-sumergible-centrifuga-q1-2-77m-210w-36v'),
+ mz('m3','Q1.7 109M 500W 48V','Sumergible Mizu',1.7,109,500,48,524800,'agotado','bomba-solar-sumergible-centrifuga-q1-7-109m-500w-48v'),
+ mz('p3','MSS3-2-150-750-72V','Tornillo 3"',2,150,750,72,618700,'disponible','bomba-solar-sumergible-centrifuga-q2-150m-750w-72v'),
+ mz('m5','Q3.5 35M 300W 24V','Centrífuga 3"',3.5,35,300,24,580000,'agotado','bomba-solar-sumergible-centrifuga-q35-35m-300w-24v'),
+ mz('p6','MSC3-3.8-55-400-48V','Centrífuga 3"',3.8,55,400,48,524800,'agotado','bomba-solar-sumergible-centrifuga-q3-8-55m-400w-48v',{win:{vmin:60,vmax:100},minS:600}),
+ mz('p4','MSC3-3.8-95-750-72V','Centrífuga 3"',3.8,95,750,72,651800,'disponible','bomba-solar-sumergible-centrifuga-q3-8-95m-750w-72v'),
+ mz('m8','Q4.5 35M 300W 24V','Sumergible Mizu',4.5,35,300,24,673900,'agotado','bomba-solar-sumergible-centrifuga-q45-35m-300w-24v'),
+ mz('m9','Q4.5 50M 400W 48V','Sumergible Mizu',4.5,50,400,48,640800,'consultar','bomba-solar-sumergible-centrifuga-q45-50m-400w-48v'),
+ mz('m10','Q4.5 95M 750W 72V','Sumergible Mizu',4.5,95,750,72,911400,'disponible','bomba-solar-sumergible-centrifuga-q4-5-95m-750w-72v'),
+ mz('m11','Q7 45M 600W 72V','Centrífuga 4"',7,45,600,72,679400,'agotado','bomba-solar-sumergible-centrifuga-q7-45m-600w-72v'),
+ mz('m12','Q7 56M 750W 72V','Centrífuga 4"',7,56,750,72,718100,'agotado','bomba-solar-sumergible-centrifuga-q7-56m-750w-72v'),
+ mz('m13','Q6.5 45M 500W 48V','Sumergible Mizu 4"',6.5,45,500,48,773300,'agotado','bomba-solar-sumergible-centrifuga-q65-45m-500w-48v'),
+ mz('p5','MSSC4-6.5-67-750-72V','Sumergible Mizu 4"',6.5,67,750,72,690500,'disponible','bomba-solar-sumergible-centrifuga-q65-67m-750w-72v'),
+ {id:'b1',brand:'Enertik',model:'BSS3-55-120-24V (120W Q0.76)',kind:'Tornillo 3"',pW:120,vnom:24,q:0.76,h:55,p:847200,stock:'disponible',win:{vmin:30,vmax:50},minS:156,age:AGE,conf:'alta',url:EN+'bomba-solar-120w-q0-76/'},
+ {id:'b2',brand:'Enertik',model:'BSS3-80-210-36V (210W Q1.25)',kind:'Tornillo 3"',pW:210,vnom:36,q:1.25,h:90,curve:[[0,90],[1.0,15],[1.25,0]],p:911900,stock:'disponible',win:{vmin:45,vmax:100},minS:273,age:AGE,conf:'alta',url:EN+'bomba-solar-210w-q1-25/',note:'La ficha publica solo dos puntos de la curva: 0 m³/h a 90 m y 1,0 m³/h a 15 m. Entre ambos se interpola en recta.'},
+ {id:'b3',brand:'Enertik',model:'BSC3-12-120-24V (120W Q2.2)',kind:'Centrífuga 3"',pW:120,vnom:24,q:2.2,h:12,curve:[[0,12],[2.0,4],[2.2,0]],p:1166300,stock:'disponible',win:{vmin:30,vmax:50},minS:156,age:AGE,conf:'alta',url:EN+'bomba-solar-sumergible-centrifuga-120w-q2-2/',note:'La ficha publica 2 m³/h a 4 m y 0 m³/h a 12 m. El tramo intermedio se interpola en recta.'},
+ {id:'b4',brand:'Enertik',model:'BSC3-23-210-36V (210W Q1.9)',kind:'Centrífuga 3"',pW:210,vnom:36,q:1.9,h:23,curve:[[0,23],[0.4,22],[0.8,21],[1.2,17],[1.6,10],[2.0,4]],p:1081600,stock:'disponible',win:{vmin:45,vmax:100},minS:273,age:AGE,conf:'alta',url:EN+'bomba-solar-sumergible-centrifuga-210w-q1-9/',note:'Curva H-Q tomada de la ficha de la tienda (0,4 m³/h a 22 m hasta 2,0 m³/h a 4 m).'}
+];
+
+/* Datos leídos de la ficha técnica de cada bomba en Enertik (09/11/2026): [Vmp mín, Voc máx, potencia solar mínima] */
+const FICHA={p1:[30,50,250],p2:[30,50,300],m3:[60,100,600],p3:[90,150,1000],m5:[30,50,500],p6:[60,100,600],p4:[90,150,1000],m8:[30,50,500],m9:[60,100,600],m10:[90,150,1000],m11:[90,150,750],m12:[90,150,1000],m13:[60,100,600],p5:[90,150,1000],b1:[30,50,156],b2:[45,100,273],b3:[30,50,156],b4:[45,100,273]};
+const MOD={m3:['MSS3-1.7-109-500-48V','Tornillo 3"'],m5:['MSC3-3.5-35-300-24V','Centrífuga 3"'],m8:['MSSC3-4.5-35-300-24V','Centrífuga 3" (impulsor inox)'],m9:['MSSC3-4.5-50-400-48V','Centrífuga 3" (impulsor inox)'],m10:['MSSC3-4.5-95-750-72V','Centrífuga 3" (impulsor inox)'],m11:['MSC4-7-45-600-72V','Centrífuga 4"'],m12:['MSC4-7-56-750-72V','Centrífuga 4"'],m13:['MSSC4-6.5-45-500-48V','Centrífuga 4" (impulsor inox)'],p5:['MSSC4-6.5-67-750-72V','Centrífuga 4" (impulsor inox)']};
+/* Diámetro de la boca de salida de cada bomba (pulgadas), leído de la ficha */
+const OUT={p1:0.75,p2:0.75,m3:0.75,p3:0.75,m5:1.25,p6:1.25,p4:1.25,m8:1.25,m9:1.25,m10:1.25,m11:1.25,m12:1.25,m13:1.25,p5:1.25,b1:0.75,b2:0.75,b3:1,b4:1};
+PUMPS.forEach(p=>{ if(OUT[p.id]) p.out=OUT[p.id]; });
+PUMPS.forEach(p=>{ const f=FICHA[p.id]; if(f){ p.win={vmin:f[0],vmax:f[1]}; p.minS=f[2]; p.ficha=true; } const m=MOD[p.id]; if(m){ p.model=m[0]; p.kind=m[1]; } });
+/* Curva de rendimiento de la ficha de la MSS3-1.7-109-500-48V (puntos leídos a ojo del gráfico) */
+(function(){ const m=PUMPS.find(p=>p.id==='m3'); if(m){ m.curve=[[0,106],[0.2,97],[0.4,86],[0.6,75],[0.8,63],[1.0,52],[1.2,40],[1.4,27],[1.6,14],[1.77,0]]; m.note='La ficha indica 109 m de altura máxima, pero el gráfico de rendimiento arranca en unos 106 m y llega a 1,77 m³/h. La app usa el gráfico; sus puntos se leyeron a ojo.'; } })();
+const ACC=[
+ ['Módulo 4G de monitoreo y control remoto Mizu',179600,'disponible','modulo-4g-de-monitoreo-y-control-remoto-para-bombas-solares-sumergibles-mizu'],
+ ['Módulo WiFi de monitoreo y control remoto Mizu',179600,'disponible','modulo-wifi-de-monitoreo-y-control-remoto-para-bombas-solares-sumergibles-mizu'],
+ ['Sensor de agua para bombas Mizu',16200,'disponible','sensor-de-agua-para-bombas-solares-mizu'],
+ ['Conector de cables para bombas Mizu',46300,'disponible','conector-de-cables-para-bombas-mizu']
+];
+const PARTS=[
+ ['Cuerpo hidráulico para MSC3-3.5-35-300-24V',193400,'disponible','cuerpo-modulo-hidraulico-de-la-bomba-para-msc3-35-35-300-24v'],
+ ['Cuerpo hidráulico para MSC3-3.8-55-400-48V',201400,'disponible','cuerpo-modulo-hidraulico-de-la-bomba-para-msc3-38-55-400-48v'],
+ ['Cuerpo hidráulico para MSC3-3.8-80-600-72V',209500,'disponible','cuerpo-modulo-hidraulico-de-la-bomba-para-msc3-38-80-600-72v'],
+ ['Cuerpo hidráulico para MSC3-3.8-95-750-72V',233700,'disponible','cuerpo-modulo-hidraulico-de-la-bomba-para-msc3-38-95-750-72v'],
+ ['Cuerpo hidráulico para MSC4-7-56-750-72V',193400,'disponible','cuerpo-modulo-hidraulico-de-la-bomba-para-msc4-7-56-750-72v'],
+ ['Cuerpo hidráulico para MSSC3-4-50-400-48V',360900,'disponible','cuerpo-modulo-hidraulico-de-la-bomba-para-mssc3-4-50-400-48v'],
+ ['Cuerpo hidráulico para MSSC3-4.5-35-300-24V',353500,'disponible','cuerpo-modulo-hidraulico-de-la-bomba-para-mssc3-45-35-300-24v'],
+ ['Cuerpo hidráulico para MSSC3-4.5-50-400-48V',360900,'agotado','cuerpo-modulo-hidraulico-de-la-bomba-para-mssc3-45-50-400-48v'],
+ ['Cuerpo hidráulico para MSSC3-4.5-95-750-72V',449300,'disponible','cuerpo-modulo-hidraulico-de-la-bomba-para-mssc3-45-95-750-72v'],
+ ['Cuerpo hidráulico para MSSC4-6.5-45-500-48V',383000,'disponible','cuerpo-modulo-hidraulico-de-la-bomba-para-mssc4-65-45-500-48v'],
+ ['Cuerpo hidráulico para MSSC4-6.5-67-750-72V',412500,'disponible','cuerpo-modulo-hidraulico-de-la-bomba-para-mssc4-65-67-750-72v'],
+ ['Placa madre del controlador Mizu 24V',209500,'disponible','placa-madre-del-controlador-mizu-24v'],
+ ['Placa madre del controlador Mizu 36V',217500,'agotado','placa-madre-del-controlador-mizu-36v'],
+ ['Placa madre del controlador Mizu 48V',233700,'disponible','placa-madre-del-controlador-mizu-48v'],
+ ['Placa madre del controlador Mizu 72V',265900,'disponible','placa-madre-del-controlador-mizu-72v'],
+ ['Acople para bombas Mizu MSC',4100,'disponible','acople-para-bombas-mizu-msc'],
+ ['Soporte intermedio para bombas Mizu MSC',8800,'disponible','soporte-intermedio-para-bombas-mizu-msc'],
+ ['Estopera para bombas Mizu MSC',7600,'disponible','estopera-para-bombas-mizu-msc'],
+ ['Sello de goma para bombas Mizu MSC3',9200,'disponible','sello-de-goma-para-bombas-mizu-msc3'],
+ ['Sello de goma para bombas Mizu MSC4',9200,'disponible','sello-de-goma-para-bombas-mizu-msc4'],
+ ['Anillo estático Mizu MSS / estopera Mizu MSSC',4100,'disponible','anillo-estatico-para-bombas-mizu-mss-estopera-para-bombas-mizu-mssc'],
+ ['Tornillo de Arquímedes Mizu MSS 120 W y 210 W',40300,'disponible','tornillo-de-arquimedes-para-bombas-mizu-mss-120w-y-210w'],
+ ['Tornillo de Arquímedes Mizu MSS 500 W y 750 W',40300,'disponible','tornillo-de-arquimedes-para-bombas-mizu-mss-500w-y-750w'],
+ ['Tapa a prueba de arena para bombas Mizu MSS',6900,'agotado','tapa-a-prueba-de-arena-para-bombas-mizu-mss'],
+ ['Estopera para bombas Mizu MSS',6100,'agotado','estopera-para-bombas-mizu-mss'],
+ ['Capucha anti-arena para bombas Mizu MSSC',7300,'disponible','capucha-anti-arena-para-bombas-mizu-mssc'],
+ ['Forro anti-arena para bombas Mizu MSSC',7600,'disponible','forro-anti-arena-para-bombas-mizu-mssc']
+];
+const TANK_ARS={600:233000,1100:390000}, PIPE_ARS_M={20:29300/25,25:50700/25};
+function tankLines(tank){
+  let best=null;
+  for(let a=0;a<=Math.ceil(tank/1100);a++){ for(let b=0;b<=Math.ceil(tank/600);b++){
+    const cap=a*1100+b*600; if(cap<tank||cap===0) continue;
+    const cost=a*TANK_ARS[1100]+b*TANK_ARS[600];
+    if(!best||cost<best.cost||(cost===best.cost&&cap<best.cap)) best={a,b,cost,cap}; } }
+  const out=[], many=(best.a+best.b)>4?'; con este volumen conviene cotizar una cisterna':'';
+  if(best.a) out.push({d:'Tanque tricapa Rotoplas 1100 L'+(out.length===0&&best.b===0&&tank<best.cap?'':'')+(many&&out.length===0?many:''),q:best.a,u:TANK_ARS[1100]/FX.ars,tag:'AR'});
+  if(best.b) out.push({d:'Tanque tricapa Rotoplas 600 L'+(!best.a&&many?many:''),q:best.b,u:TANK_ARS[600]/FX.ars,tag:'AR'});
+  out[0].d+=' (capacidad total '+nf(best.cap,0)+' L para '+nf(tank,0)+' L)';
+  return out;
+}
+function pipeLine(i,h){
+  const L=i.st+i.dd+i.dh+i.horiz, pm=PIPE_ARS_M[h.diam];
+  if(pm&&h.tdh<=35) return {d:'Caño de polietileno K4 de '+(h.diam<=20?'1/2"':'3/4"')+' ('+nf(L,0)+' m), más accesorios y mano de obra a cotizar',q:L,u:pm/FX.ars,tag:'AR',m:true};
+  return {d:'Cañería de '+h.diam+' mm ('+nf(L,0)+' m), accesorios y mano de obra. Elegí un caño que soporte al menos '+nf(Math.ceil(h.tdh*1.3/10),0)+' kgf/cm²',q:1,u:null,tag:'—'};
+}
+const SENSOR_ARS=16200, SPD_ARS=36300, FUSE_ARS=5400, HOLD_ARS=7700;
+const PANELS=[
+ {id:'as340',brand:'Amerisolar',name:'Amerisolar Policristalino 340 W (AS-6P-340W)',w:340,voc:47.5,vmp:38.2,isc:9.22,imp:8.9,tcV:-0.32,tcP:-0.40,vsys:1000,p:316000,stock:'sin dato',q:0.85,tech:'poli 72 celdas (datos y precio del trabajo práctico; coef. y Vmáx supuestos)',url:null},
+ {id:'ps90',brand:'Enertik',name:'Enertik Policristalino 90 W (PS-90)',w:90,voc:22.2,vmp:18.8,isc:5.34,imp:4.79,tcV:-0.34,tcP:-0.47,vsys:1000,p:80100,stock:'disponible',q:0.85,tech:'poli 36 celdas',url:'https://enertik.com/ar/tienda/fotovoltaica/paneles-solares/panel-solar-enertik-policristalino-90w/'},
+ {id:'ps120',brand:'Enertik',name:'Enertik Policristalino 120 W',w:120,voc:22.0,vmp:18.6,isc:7.2,imp:6.46,tcV:-0.34,tcP:-0.47,vsys:1000,p:98000,stock:'disponible',q:0.85,tech:'poli 36 celdas',url:'https://enertik.com/ar/tienda/fotovoltaica/paneles-solares/panel-solar-enertik-policristalino-120w/'},
+ {id:'ps170',brand:'Enertik',name:'Enertik Monocristalino 170 W (PS-170M)',w:170,voc:24.5,vmp:20.44,isc:8.94,imp:8.32,tcV:-0.32,tcP:-0.39,vsys:1000,p:154900,stock:'disponible',q:0.92,tech:'mono 36 celdas',url:'https://enertik.com/ar/tienda/fotovoltaica/paneles-solares/panel-solar-enertik-monocristalino-170w/'},
+ {id:'ps370',brand:'Enertik',name:'Enertik Monocristalino PERC 370 W (PS-370M)',w:370,voc:40.9,vmp:34.4,isc:11.53,imp:10.76,tcV:-0.32,tcP:-0.39,vsys:1500,p:222200,stock:'disponible',q:0.93,tech:'mono PERC 120 celdas',url:'https://enertik.com/ar/tienda/fotovoltaica/paneles-solares/panel-solar-enertik-monocristalino-370w/'},
+ {id:'am440',brand:'Amerisolar',name:'Amerisolar N-TOPCon 440 W',w:440,voc:38.8,vmp:32.6,isc:14.18,imp:13.5,tcV:-0.25,tcP:-0.3,vsys:1500,p:178000,stock:'pocas unidades',q:1.0,tech:'N-TOPCon 108 celdas',url:'https://enertik.com/ar/tienda/fotovoltaica/paneles-solares/panel-solar-amerisolar-monocristalino-n-topcon-440w/'},
+ {id:'tr450',brand:'Trina',name:'Trina Vertex+ N-TOPCon 450 W',w:450,voc:52.9,vmp:44.6,isc:10.74,imp:10.09,tcV:-0.24,tcP:-0.3,vsys:1500,p:206800,stock:'disponible',q:1.06,tech:'N-TOPCon doble vidrio 144 celdas',url:'https://enertik.com/ar/tienda/fotovoltaica/paneles-solares/panel-solar-trina-monocristalino-n-type-topcon-vertex-450w/'},
+ {id:'am585',brand:'Amerisolar',name:'Amerisolar N-TOPCon 585 W',w:585,voc:51.4,vmp:43.2,isc:14.29,imp:13.54,tcV:-0.25,tcP:-0.3,vsys:1500,p:240800,stock:'disponible',q:1.0,tech:'N-TOPCon 144 celdas',url:'https://enertik.com/ar/tienda/fotovoltaica/paneles-solares/panel-solar-amerisolar-monocristalino-n-topcon-585w/'},
+ {id:'tr610',brand:'Trina',name:'Trina Vertex N bifacial 610 W',w:610,voc:49.0,vmp:40.8,isc:15.86,imp:14.96,tcV:-0.24,tcP:-0.29,vsys:1500,p:268500,stock:'pocas unidades',q:1.06,tech:'N-TOPCon bifacial doble vidrio 132 celdas',url:'https://enertik.com/ar/tienda/fotovoltaica/paneles-solares/panel-solar-trina-n-type-topcon-bifacial-doble-vidrio-vertex-n-610w/'},
+ {id:'jk635',brand:'Jinko',name:'Jinko Tiger Neo bifacial 635 W',w:635,voc:57.21,vmp:47.86,isc:13.92,imp:13.27,tcV:-0.25,tcP:-0.29,vsys:1500,p:283100,stock:'pocas unidades',q:1.05,tech:'N-TOPCon bifacial doble vidrio 156 celdas',url:'https://enertik.com/ar/tienda/fotovoltaica/paneles-solares/panel-solar-jinko-solar-bifacial-con-doble-vidrio-n-type-topcon-tiger-neo-635w/'},
+ {id:'hn720',brand:'Hanersun',name:'Hanersun Hitouch 6N bifacial 720 W',w:720,voc:49.0,vmp:41.2,isc:18.5,imp:17.48,tcV:-0.23,tcP:-0.28,vsys:1500,p:306700,stock:'disponible',q:1.03,tech:'N-TOPCon bifacial doble vidrio 132 celdas',url:'https://enertik.com/ar/tienda/fotovoltaica/paneles-solares/panel-solar-hanersun-mono-n-topcon-bifacial-con-doble-vidrio-hitouch-6n-720w/'},
+ {id:'tr725',brand:'Trina',name:'Trina Vertex N bifacial 725 W',w:725,voc:49.6,vmp:41.5,isc:18.54,imp:17.47,tcV:-0.24,tcP:-0.29,vsys:1500,p:317000,stock:'disponible',q:1.06,tech:'N-TOPCon bifacial doble vidrio 132 celdas',url:'https://enertik.com/ar/tienda/fotovoltaica/paneles-solares/panel-solar-trina-n-type-topcon-bifacial-doble-vidrio-vertex-n-725w/'}
+];
+const KITS=[
+ {id:'k11',name:'Kit ADN Solar monofásico 1,1 kW (1,5 HP)',kw:1.1,ph:'monofásico',solar:3600,win:[120,450],p:2398760,stock:'en stock',age:'150 días',conf:'media',url:'https://adnsolar.com.ar/producto/kit-bombeo-solar-monofasico-11kw-15hp/'},
+ {id:'k22',name:'Kit ADN Solar trifásico 2,2 kW (3 HP)',kw:2.2,ph:'trifásico',solar:6300,win:[250,800],p:3913724,stock:'a pedido',age:'83 días',conf:'media',url:'https://adnsolar.com.ar/producto/kit-bombeo-solar-trifasico-22kw-3hp/'},
+ {id:'k40',name:'Kit ADN Solar trifásico 4 kW (5,5 HP)',kw:4,ph:'trifásico',solar:6300,win:[250,800],p:3803055,stock:'en stock',age:'150 días; la ficha del producto (537 días) indica ARS 4.457.381',conf:'baja',url:'https://adnsolar.com.ar/producto/kit-bombeo-solar-trifasico-4kw-55hp/'},
+ {id:'k75',name:'Kit ADN Solar trifásico 7,5 kW (10 HP)',kw:7.5,ph:'trifásico',solar:12600,win:[250,800],p:7325625,stock:'a pedido',age:'55 días',conf:'media',url:'https://adnsolar.com.ar/producto/kit-bombeo-solar-trifasico-75kw-10hp/'},
+ {id:'k110',name:'Kit ADN Solar trifásico 11 kW (15 HP)',kw:11,ph:'trifásico',solar:null,win:[250,800],p:8086925,stock:'sin dato',age:'listado antiguo, sin fecha',conf:'baja',url:'https://adnsolar.com.ar/categoria-producto/products/solar-kits/kits-solares-para-bombeo-de-agua/'},
+ {id:'k150',name:'Kit ADN Solar trifásico 15 kW (20 HP)',kw:15,ph:'trifásico',solar:25200,win:[250,800],p:10651180,stock:'en stock',age:'230 días',conf:'baja',url:'https://adnsolar.com.ar/producto/kit-bombeo-solar-trifasico-15kw-20hp/'}
+];
+const CABLE_ARS={2.5:4100,4:4900,6:6400};
+const SECT=[4,6,10,16,25,35];
+const cableUsd=s=>(CABLE_ARS[s]!=null?CABLE_ARS[s]:1900+700*s)/FX.ars;
+const ISO_GBP=26.15;
+const CONFTXT={alta:'Alta',media:'Media',baja:'Baja','sin precio':'Sin precio'};
+const pumpUsd=p=>p.p==null?null:p.p/FX.ars;
+const kitUsd=k=>k.p/FX.ars;
+let CUSTOM=null;
+
+/* ---------- Utilidades ---------- */
+const nf=(n,d=1)=>Number.isFinite(n)?Number(n).toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:d}):'—';
+const usd=(n,d=0)=>n==null?'a cotizar':'US$ '+Number(n).toLocaleString('es-AR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const STAT={ok:'CUMPLE',warn:'REVISAR',bad:'NO CUMPLE',info:'SIN DATO'};
+
+/* ---------- Curva de la bomba ---------- */
+function flowAt(pump,H){
+  if(pump.curve){
+    const c=pump.curve;
+    if(H>=c[0][1]) return 0;
+    for(let k=0;k<c.length-1;k++){
+      const a=c[k],b=c[k+1];
+      if(H<=a[1]&&H>=b[1]){ const t=(a[1]-H)/(a[1]-b[1]); return a[0]+t*(b[0]-a[0]); }
+    }
+    return c[c.length-1][0];
+  }
+  return Math.max(0,pump.q*(1-H/pump.h));
+}
+function parseCode(s){
+  const m=String(s).replace(/,/g,'.').match(/(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)/);
+  if(!m) return null;
+  const q=+m[1],h=+m[2],v=+m[3],w=+m[4];
+  if(!(q>0&&h>0&&v>0&&w>0)) return null;
+  return {id:'c',brand:'Bomba propia',model:String(s).trim(),kind:'Código ingresado',pW:w,vnom:v,q:q,h:h,p:null,stock:'sin dato',win:null,minS:null,age:'ingresada por el usuario',conf:'sin precio',url:null};
+}
+
+/* ---------- Lectura de datos ---------- */
+function readInputs(){
+  const pv=$('prov').value; const reg=PROV[+pv]?PROV[+pv][1]:null;
+  const n=id=>parseFloat($(id).value);
+  return {provIdx:+pv,prov:PROV[+pv][0],reg,season:$('season').value,vol:n('vol'),st:n('st')||0,dd:0,qt:n('qt')||0,dh:n('dh')||0,horiz:n('horiz')||0,
+    diam:($('diam').value==='auto'?0:n('diam')),dist:n('dist')||1,hspManual:n('hspManual')||0,over:n('over')||1.5,auton:n('auton')||1,C:n('chw')||140,pf:n('pf')||1,
+    ctrl:$('ctrl').value,water:$('water').value,cli:($('cli').value||'').trim(),obra:($('obra').value||'').trim(),inst:($('inst').value||'').trim(),valid:parseInt($('valid').value)||7,tmin:(isFinite(parseFloat($('tmin').value))?parseFloat($('tmin').value):0)};
+}
+function hyd(i){
+  const base=i.hspManual>0?i.hspManual:(i.reg?REGIONS[i.reg].lo:0);
+  const hsp=base*(i.season==='inv'?WINTER:1);
+  const q=i.qt>0?i.qt:i.vol/(1000*hsp);
+  const L=i.st+i.dd+i.dh+i.horiz, Q=q/3600;
+  const hfOf=d=>10.67*L*Math.pow(Q,1.852)/(Math.pow(i.C,1.852)*Math.pow(d/1000,4.87));
+  const vOf=d=>Q/(Math.PI*Math.pow(d/2000,2));
+  let diam=i.diam, auto=false;
+  if(!(diam>0)){ auto=true; const list=[20,25,32,40,50,63,75,90,110]; diam=list[list.length-1];
+    for(const d of list){ if(vOf(d)<=1.5&&hfOf(d)<=Math.max(2,0.1*(i.st+i.dd+i.dh))){ diam=d; break; } } }
+  const hf=hfOf(diam), v=vOf(diam);
+  const tdh=i.st+i.dd+i.dh+hf;
+  const ph=q*tdh*2.725;
+  return {hsp,q,L,hf,tdh,ph,diam,v,auto};
+}
+function pickSection(L,I,V,drop,k){
+  const need=k*L*I*RHO/(drop*V);
+  const s=SECT.find(x=>x>=need);
+  return {need,s:s||35,over:!s};
+}
+
+/* ---------- Arreglo para bombas DC ---------- */
+function vocC(panel,nS,i){ return nS*panel.voc*(1+Math.abs(panel.tcV)/100*(25-i.tmin)); }
+function configsA(pump,panel,i){
+  const Preq=Math.max(i.over*pump.pW,pump.minS||0), out=[];
+  let lo,hi;
+  if(pump.win){ lo=Math.max(1,Math.ceil(pump.win.vmin/panel.vmp)); hi=Math.floor(pump.win.vmax/(vocC(panel,1,i))); }
+  else { lo=hi=Math.max(1,Math.round(pump.vnom/panel.vmp)); }
+  for(let nS=lo;nS<=Math.min(hi,lo+2);nS++){
+    if(pump.win&&vocC(panel,nS,i)>pump.win.vmax) continue;
+    const nTot=Math.ceil(Preq/panel.w);
+    out.push({nS,nP:Math.max(1,Math.ceil(nTot/nS)),Preq});
+  }
+  return out;
+}
+function configA(pump,panel,i){ const c=configsA(pump,panel,i); return c.length?c[0]:null; }
+
+/* ---------- Ruta A: bomba DC con controlador ---------- */
+function effH(i,h,pump){
+  /* La fricción depende del caudal que realmente entrega la bomba, que a su vez depende de la altura: se itera.
+     Si el diámetro es automático, también se elige para ese caudal real. */
+  const hfOf=(q,d)=>10.67*h.L*Math.pow(q/3600,1.852)/(Math.pow(i.C,1.852)*Math.pow(d/1000,4.87));
+  const vOf=(q,d)=>q/3600/(Math.PI*Math.pow(d/2000,2));
+  const pick=q=>{ if(!h.auto) return h.diam; const list=[20,25,32,40,50,63,75,90,110];
+    for(const d of list){ if(vOf(q,d)<=1.5&&hfOf(q,d)<=Math.max(2,0.1*(i.st+i.dd+i.dh))) return d; } return 110; };
+  let tdh=h.tdh, diam=h.diam, q=flowAt(pump,tdh);
+  for(let k=0;k<10;k++){
+    if(q<=0) break;
+    diam=pick(q);
+    const nt=i.st+i.dd+i.dh+hfOf(q,diam);
+    const nq=flowAt(pump,nt);
+    const done=Math.abs(nt-tdh)<0.01; tdh=nt; q=nq; if(done) break;
+  }
+  if(q<=0) return Object.assign({},h,{tdh:tdh,diam:diam});
+  return Object.assign({},h,{diam:diam,hf:tdh-(i.st+i.dd+i.dh),tdh:tdh,v:vOf(q,diam)});
+}
+function evalA(i,h0,pump,panel,nS,nP){
+  const h=effH(i,h0,pump);
+  const N=nS*nP, Parr=N*panel.w;
+  const vmpS=nS*panel.vmp, vocCold=vocC(panel,nS,i), iscT=panel.isc*nP*1.25;
+  const w=pump.win;
+  const Preq=Math.max(i.over*pump.pW,pump.minS||0);
+  const Qop=flowAt(pump,h.tdh);
+  const hours=Qop>0?i.vol/(Qop*1000):Infinity;
+  const Vdel=Qop*1000*h.hsp;
+  const d1=vmpS>=150?0.01:0.03, d2=pump.vnom>=100?0.03:0.05;
+  const c1=pickSection(i.dist,panel.imp*nP,vmpS,d1,2);
+  const Lp=i.st+i.dd+10, Ip=pump.pW/pump.vnom;
+  const c2=pickSection(Lp,Ip,pump.vnom,d2,2);
+  const tank=i.vol*i.auton;
+  const lines=[
+    {d:pump.brand+' '+pump.model+' (bomba con controlador)',q:1,u:pumpUsd(pump),tag:'AR'},
+    {d:'Sensor de nivel de agua (protección contra marcha en seco)',q:1,u:SENSOR_ARS/FX.ars,tag:'AR'},
+    {d:N+' × '+panel.brand+' '+panel.name.replace(panel.brand+' ',''),q:N,u:(panel.p/FX.ars)*i.pf,tag:'AR',unit:true},
+    {d:'Estructura de montaje por módulo',q:N,u:STRUCT_USD*i.pf,tag:'INT',unit:true},
+    {d:'Cable solar '+c1.s+' mm² arreglo a controlador ('+nf(i.dist,0)+' m × 2)',q:i.dist*2,u:cableUsd(c1.s)*i.pf,tag:c1.s>6?'EST':'AR',unit:true,m:true},
+    {d:'Cable de '+c2.s+' mm² hacia la bomba ('+nf(Lp,0)+' m; confirmar con el fabricante cuánto cable trae la bomba)',q:1,u:null,tag:'—'},
+    {d:'Seccionador DC 32 A / 1200 V',q:1,u:ISO_GBP*FX.gbp*i.pf,tag:'INT'},
+    {d:'Descargador de sobretensión DC 1000 Vcc 2P 20/40 kA',q:1,u:SPD_ARS/FX.ars,tag:'AR'},
+    {d:'Puesta a tierra (barra, conductor 6 mm², jabalina)',q:1,u:null,tag:'—'},
+    ...tankLines(tank)
+  ];
+  if(nP>2){ lines.push({d:'Fusibles gPV 10x38 mm 1000 Vcc 15 A (2 por serie)',q:nP*2,u:FUSE_ARS/FX.ars,tag:'AR'}); lines.push({d:'Portafusibles gPV 1000 Vcc (2 por serie)',q:nP*2,u:HOLD_ARS/FX.ars,tag:'AR'}); }
+  if(i.ctrl==='cac') lines.push({d:'Controlador CA/CC con entrada de red o generador',q:1,u:null,tag:'—'});
+  lines.push(pipeLine(i,h));
+  const ck=[];
+  if(Qop<=0){
+    ck.push({s:'bad',t:'Altura de trabajo',d:'El CDT de '+nf(h.tdh)+' m supera la altura máxima de la bomba ('+pump.h+' m). No entrega agua.',r:'Criterio de diseño'});
+  } else {
+    ck.push({s:hours<=h.hsp?'ok':(hours<=h.hsp*1.1?'warn':'bad'),t:'Horas de bombeo',d:nf(i.vol,0)+' L/día ÷ '+nf(Qop*1000,0)+' L/h = '+nf(hours,1)+' h/día frente a '+nf(h.hsp,2)+' HSP. El caudal sale de la curva a '+nf(h.tdh)+' m'+(pump.curve?' (curva de la ficha).':' (recta estimada entre caudal y altura máximos; pedí la curva al fabricante).'),r:'Criterio de diseño'});
+    if(i.qt>0) ck.push({s:Qop>=i.qt*0.9?'ok':'warn',t:'Caudal objetivo',d:'La bomba entrega '+nf(Qop,2)+' m³/h a '+nf(h.tdh)+' m frente a un objetivo de '+nf(i.qt,2)+' m³/h.',r:'Datos del caso'});
+    const fq=Qop/pump.q, fh=h.tdh/pump.h;
+    const inZone=fq>=0.4&&fq<=0.85&&fh>=0.2&&fh<=0.8;
+    ck.push({s:inZone?'ok':'warn',t:'Punto de trabajo',d:'Caudal al '+nf(fq*100,0)+'% del máximo y altura al '+nf(fh*100,0)+'% del máximo. '+(inZone?'Es un punto intermedio de la curva.':'Queda cerca de un extremo de la curva; conviene trabajar en un punto intermedio.'),r:'Criterio de diseño (límites orientativos)'});
+  }
+  ck.push({s:Parr>=Preq?'ok':((pump.minS&&Parr>=pump.minS)?'warn':'bad'),t:'Potencia solar',d:nf(Parr,0)+' Wp instalados frente a '+nf(Preq,0)+' Wp ('+nf(i.over,1)+' × '+pump.pW+' W'+(pump.minS&&pump.minS>i.over*pump.pW?', o el mínimo del fabricante':'')+').'+((pump.minS&&Parr<Preq&&Parr>=pump.minS)?' Cumple el mínimo del fabricante ('+pump.minS+' Wp) pero queda por debajo del 50% de margen recomendado.':''),r:'Criterio de diseño'});
+  if(w){
+    ck.push({s:vocCold<=w.vmax?'ok':'bad',t:'Voc en frío vs controlador',d:nf(vocCold)+' V frente a un máximo de '+w.vmax+' V.',r:'Ficha del fabricante'});
+    ck.push({s:vmpS>=w.vmin?'ok':'bad',t:'Vmp vs mínimo del controlador',d:nf(vmpS)+' V frente a un mínimo de '+w.vmin+' V (a STC, según la ficha de la bomba).',r:'Ficha del fabricante'});
+  } else ck.push({s:'info',t:'Ventana de tensión del controlador',d:'No se conoce para este modelo. Con '+nS+' en serie: Vmp '+nf(vmpS)+' V y Voc en frío '+nf(vocCold)+' V, para una bomba de '+pump.vnom+' V. Confirmala en la ficha técnica.',r:'Fabricante'});
+  if(w){ const vh=vmpS*(1-Math.abs(panel.tcV)/100*40); ck.push({s:vh>=w.vmin?'ok':'warn',t:'Vmp con módulos calientes',d:'Con el módulo a 65 °C el Vmp baja a '+nf(vh)+' V (mínimo del controlador '+w.vmin+' V). Si queda debajo, la bomba arranca más tarde en las horas de más calor.',r:'Coef. de temperatura de la ficha del módulo'}); }
+  ck.push({s:vocCold<=Math.min(1000,panel.vsys)?'ok':'bad',t:'Tensión máxima del arreglo',d:'Voc en frío '+nf(vocCold)+' V (a '+nf(i.tmin,0)+' °C, coef. '+panel.tcV+' %/°C). Límite del módulo '+panel.vsys+' V y 1000 V DC para el seccionador y la instalación.',r:'Ficha del módulo; IEC 60364-7-712 (sumario)'});
+  if(panel.stock==='pocas unidades') ck.push({s:'warn',t:'Disponibilidad del módulo',d:'La tienda indica pocas unidades. Confirmá que alcanzan para '+N+' módulos.',r:'Enertik Argentina'});
+  ck.push({s:iscT<=32?'ok':'bad',t:'Seccionador DC',d:'Isc × 1,25 del arreglo = '+nf(iscT)+' A; el seccionador cotizado es de 32 A y 1200 V. Debe estar cerca del controlador.',r:'IEC 60364-7-712 §712.536.2.2 (sumario)'});
+  ck.push({s:nP>2?'warn':'ok',t:'Fusibles de string',d:nP>2?'Con más de 2 series en paralelo se exigen fusibles gPV por string.':'Con '+nP+' serie(s) en paralelo no se exigen fusibles por string.',r:'IEC 60364-7-712 (sumario)'});
+  ck.push({s:'warn',t:'Protección contra sobretensiones',d:'Instalar un descargador de sobretensión DC cerca del seccionador. Está incluido en el presupuesto.',r:'IEC 60364-7-712 §712.443 (sumario)'});
+  ck.push({s:'warn',t:'Puesta a tierra',d:'Unir marcos y estructura a la barra de tierra con cobre de 6 mm². Medir ≤ 0,3 Ω entre marco y tierra.',r:'IEC 60364-7-712 §712.411 (sumario)'});
+  if(i.ctrl==='cc') ck.push({s:'warn',t:'Controlador CC y tanque',d:'Con controlador CC la bomba trabaja solo de día y no necesita baterías. Se necesita un tanque de al menos '+nf(tank,0)+' L ('+nf(i.auton,1)+' día(s) de consumo) para la noche y los días nublados.',r:'Criterio de diseño'});
+  else ck.push({s:'warn',t:'Controlador CA/CC',d:'Permite conectar red o generador de respaldo. No inyecta energía a la red. Verificá que el controlador soporte '+pump.vnom+' V y '+pump.pW+' W, y que la bomba sea compatible. No tiene precio verificado.',r:'Criterio de diseño'});
+  ck.push(i.water==='sucia'?{s:'warn',t:'Calidad del agua',d:'Las partículas, el agua dura y el funcionamiento en seco acortan la vida útil de la bomba (10 a 15 años en condiciones normales). Agregar filtro en la toma y revisar la bomba con más frecuencia.',r:'Criterio de diseño'}:{s:'info',t:'Vida útil',d:'Entre 10 y 15 años según calidad y uso. El sensor de nivel detiene la bomba si falta agua y evita el sobrecalentamiento.',r:'Criterio de diseño'});
+  ck.push({s:c1.over?'bad':'ok',t:'Cable del arreglo',d:'Cable solar H1Z2Z2-K de '+c1.s+' mm² (calculado '+nf(c1.need,1)+' mm²) para caída ≤ '+nf(d1*100,0)+'% a '+nf(i.dist,0)+' m. Mínimo 2,5 mm², y 4 mm² si pasa de 20 m. Se usa 1% en arreglos de 150 V o más y 3% en baja tensión.',r:'IEC 60364-7-712 §712.522 (sumario) y criterio de diseño'});
+  ck.push({s:c2.over?'bad':(c2.s>10?'warn':'ok'),t:'Cable hacia la bomba',d:'Sección '+c2.s+' mm² (calculada '+nf(c2.need,1)+' mm²) para caída ≤ '+nf(d2*100,0)+'% a '+nf(Lp,0)+' m con '+nf(Ip,1)+' A. '+(c2.s>10?'Es una sección grande; consultá al fabricante por el cable indicado y su precio real.':''),r:'Criterio de diseño; el fabricante manda'});
+  ck.push({s:h.v<=1.5?'ok':'warn',t:'Cañería',d:'Diámetro interno de '+h.diam+(h.auto?' mm (elegido por la app)':' mm')+': velocidad '+nf(h.v,2)+' m/s (conviene hasta 1,5 m/s) y pérdida por fricción de '+nf(h.hf,1)+' m en '+nf(h.L,0)+' m de recorrido.',r:'Hazen-Williams; criterio de diseño'});
+  if(pump.out){ const mm=pump.out*25.4, fr={0.75:'3/4"',1:'1"',1.25:'1 1/4"'}[pump.out]||(pump.out+'"');
+    if(h.diam<Math.round(mm)-1) ck.push({s:'warn',t:'Salida de la bomba',d:'La cañería de '+h.diam+' mm es más chica que la boca de salida de la bomba ('+fr+', unos '+nf(mm,0)+' mm). Usá un caño de al menos ese diámetro o una reducción solo en el tramo final.',r:'Ficha de la bomba'});
+    else ck.push({s:'ok',t:'Salida de la bomba',d:'La boca de salida de la bomba es de '+fr+' ('+nf(mm,0)+' mm) y la cañería de '+h.diam+' mm no la reduce.',r:'Ficha de la bomba'}); }
+  if(pump.note) ck.push({s:'info',t:'Dato de la bomba',d:pump.note,r:'Criterio de diseño'});
+  if(pump.stock==='agotado') ck.push({s:'warn',t:'Disponibilidad',d:'El modelo figura agotado en la tienda.',r:'Enertik Argentina'});
+  if(pump.stock==='limitado') ck.push({s:'warn',t:'Disponibilidad',d:'La tienda mostró una sola unidad en stock.',r:'Enertik Argentina'});
+  if(pump.p==null) ck.push({s:'warn',t:'Precio de la bomba',d:'No hay precio verificado. El total no incluye la bomba.',r:'—'});
+  return {kind:'A',title:pump.brand+' '+pump.model,sub:pump.kind+' · '+pump.pW+' W · '+pump.vnom+' V · '+pump.q+' m³/h · '+pump.h+' m máx.',
+    lines,checks:ck,
+    metrics:[['CDT',nf(h.tdh),'m'],['Caudal en el punto de trabajo',nf(Qop*1000,0),'L/h'],['Horas de bombeo',nf(hours,1),'h/día (HSP '+nf(h.hsp,2)+')'],['Potencia solar mínima',nf(Preq,0),'Wp'],
+      ['Arreglo instalado',nf(Parr,0),'Wp'],['Configuración',nS+'S × '+nP+'P','módulos'],['Vmp / Voc frío',nf(vmpS,0)+' / '+nf(vocCold,0),'V'],['Volumen estimado',nf(Vdel,0),'L/día']],
+    pump,panel,nS,nP,h:h};
+}
+
+/* ---------- Ruta B: kit variador + paneles (bomba AC aparte) ---------- */
+function evalB(i,h,kit){
+  const need=h.ph/ETA_AC/1000;
+  const Pmin=i.over*need*1000;
+  const tank=i.vol*i.auton;
+  const lines=[
+    {d:kit.name+' (variador + paneles)',q:1,u:kitUsd(kit),tag:'AR'},
+    {d:'Bomba sumergible AC de '+nf(Math.max(need,0.37),2)+' kW mínimo',q:1,u:null,tag:'—'},
+    {d:'Estructura de montaje, cables, protecciones DC y tierra',q:1,u:null,tag:'—'},
+    ...tankLines(tank),
+    pipeLine(i,h)
+  ];
+  const ck=[];
+  ck.push({s:kit.kw>=need?'ok':'bad',t:'Potencia del variador',d:'Potencia eléctrica mínima de la bomba '+nf(need,2)+' kW (η = '+nf(ETA_AC,2)+') frente a '+nf(kit.kw,1)+' kW del kit.',r:'Cálculo hidráulico'});
+  ck.push(kit.solar!=null?{s:kit.solar>=Pmin?'ok':'bad',t:'Potencia solar',d:'El kit trae '+nf(kit.solar,0)+' Wp nominales frente a '+nf(Pmin,0)+' Wp ('+nf(i.over,1)+' × la potencia de la bomba).',r:'Ficha ADN Solar'}:{s:'info',t:'Potencia solar',d:'La ficha no indica los Wp del kit. Necesitás '+nf(Pmin,0)+' Wp ('+nf(i.over,1)+' × la potencia de la bomba).',r:'Criterio de diseño'});
+  ck.push({s:'info',t:'Ventana de tensión',d:'Entrada solar '+kit.win[0]+' a '+kit.win[1]+' V según el fabricante. Confirmá Voc en frío ≤ '+kit.win[1]+' V y ≤ 1000 V.',r:'Ficha ADN Solar; IEC 60364-7-712 (sumario)'});
+  ck.push({s:'warn',t:'Bomba AC',d:'Elegí una bomba '+kit.ph+' y verificá su curva a '+nf(h.tdh)+' m: debe dar '+nf(h.q*1000,0)+' L/h durante '+nf(h.hsp,2)+' h, con el punto de trabajo en un tramo intermedio de la curva.',r:'Criterio de diseño'});
+  ck.push({s:'warn',t:'Seccionador DC y fusibles',d:'Instalar seccionador DC para Voc × 1,15 e Isc × 1,25, y fusibles gPV si hay más de 2 series en paralelo.',r:'IEC 60364-7-712 §712.536.2.2 (sumario)'});
+  ck.push({s:'warn',t:'Protección contra sobretensiones',d:'Instalar un SPD tipo 2 en DC y otro en AC si corresponde.',r:'IEC 60364-7-712 §712.443 (sumario)'});
+  ck.push({s:'warn',t:'Puesta a tierra',d:'Unir marcos y estructura a tierra con cobre de 6 mm². Medir ≤ 0,3 Ω.',r:'IEC 60364-7-712 §712.411 (sumario)'});
+  ck.push({s:'warn',t:'Cables',d:'Cable solar H1Z2Z2-K, mínimo 2,5 mm² (4 mm² si pasa de 20 m), caída ≤ 1% en DC.',r:'IEC 60364-7-712 §712.522 (sumario)'});
+  ck.push({s:'warn',t:'Tanque',d:'Tanque de al menos '+nf(tank,0)+' L ('+nf(i.auton,1)+' día(s) de consumo) para la noche y los días nublados.',r:'Criterio de diseño'});
+  ck.push(i.water==='sucia'?{s:'warn',t:'Calidad del agua',d:'Las partículas, el agua dura y el funcionamiento en seco acortan la vida útil. Agregar filtro en la toma y protección contra marcha en seco.',r:'Criterio de diseño'}:{s:'info',t:'Vida útil',d:'Entre 10 y 15 años según calidad y uso. Agregá protección contra marcha en seco.',r:'Criterio de diseño'});
+  if(kit.conf==='baja') ck.push({s:'warn',t:'Precio del kit',d:'La publicación es antigua o hay dos precios distintos. Pedí cotización actualizada.',r:'ADN Solar'});
+  if(kit.stock==='a pedido') ck.push({s:'warn',t:'Disponibilidad',d:'El kit figura a pedido.',r:'ADN Solar'});
+  return {kind:'B',title:kit.name,sub:kit.ph+' · entrada solar '+kit.win[0]+' a '+kit.win[1]+' V · bomba AC no incluida',lines,checks:ck,
+    metrics:[['CDT',nf(h.tdh),'m'],['Caudal requerido',nf(h.q*1000,0),'L/h'],['Horas de bombeo',nf(h.hsp,2),'h/día (HSP)'],['Potencia solar mínima',nf(Pmin,0),'Wp'],
+      ['Potencia hidráulica',nf(h.ph,0),'W'],['Motor mínimo',nf(need,2),'kW'],['Variador del kit',nf(kit.kw,1),'kW'],['Wp del kit',kit.solar!=null?nf(kit.solar,0):'sin dato','Wp']],kit};
+}
+
+/* ---------- Totales y veredicto ---------- */
+function finalize(r){
+  let total=0,unp=0;
+  r.lines.forEach(l=>{ if(l.u==null) unp++; else total+=l.u*l.q; });
+  r.total=total; r.unpriced=unp;
+  r.nbad=r.checks.filter(c=>c.s==='bad').length; r.nwarn=r.checks.filter(c=>c.s==='warn').length;
+  r.verdict=r.nbad?'bad':(r.nwarn?'warn':'ok');
+  r.score=r.total/(r.panel?r.panel.q:1);
+  return r;
+}
+
+/* ---------- Selección automática ---------- */
+function auto(i,h){
+  const opts=[];
+  for(const pump of PUMPS){
+    if(pump.stock==='agotado') continue;
+    const he=effH(i,h,pump); const Qop=flowAt(pump,he.tdh); if(Qop<=0) continue;
+    if(i.vol/(Qop*1000)>h.hsp) continue;
+    for(const panel of PANELS){
+      if(panel.stock==='agotado') continue;
+      for(const c of configsA(pump,panel,i)) opts.push(finalize(evalA(i,h,pump,panel,c.nS,c.nP)));
+    }
+  }
+  const good=opts.filter(o=>o.nbad===0);
+  const priced=good.filter(o=>o.pump.p!=null).sort((a,b)=>a.score-b.score);
+  const unpriced=good.filter(o=>o.pump.p==null).sort((a,b)=>a.score-b.score);
+  const ranked=priced.concat(unpriced);
+  if(ranked.length){
+    const best=ranked[0]; const seen={}; seen[best.pump.id]=1; best.alts=[];
+    for(const o of ranked){ if(!seen[o.pump.id]&&best.alts.length<2){ seen[o.pump.id]=1; best.alts.push(o); } }
+    const cheap=priced.length?priced.slice().sort((a,b)=>a.total-b.total)[0]:best;
+    const robust=(priced.length?priced:ranked).slice().sort((a,b)=>(a.nwarn-b.nwarn)||(b.panel.q-a.panel.q)||((a.pump.stock==='disponible'?0:1)-(b.pump.stock==='disponible'?0:1))||(a.score-b.score))[0];
+    const props=[]; [['Mejor precio-calidad',best],['Más económica',cheap],['Más robusta',robust]].forEach(p=>{ const f=props.find(q=>q.o===p[1]); if(f) f.label+=' y '+p[0].toLowerCase(); else props.push({label:p[0],o:p[1]}); });
+    props.forEach(p=>{ p.o.props=props; });
+    return best;
+  }
+  const need=h.ph/ETA_AC/1000;
+  const kit=KITS.find(k=>k.kw>=need&&(k.solar==null||k.solar>=i.over*need*1000));
+  if(kit){ const r=finalize(evalB(i,h,kit)); r.reason='Ninguna bomba DC del catálogo cubre el volumen en las horas sol pico a esta altura. Se propone bomba AC con variador solar.'; return r; }
+  return {none:true,msg:'Con estos datos no hay equipo en la base que cubra la necesidad (motor de al menos '+nf(need,1)+' kW o potencia solar mayor al kit más grande). Reducí el caudal diario, bajá la altura, o pedí cotización de un equipo a medida.'};
+}
+
+/* ---------- Render ---------- */
+let LAST=null, LASTI=null, LASTH=null;
+function totalCell(o){ return usd(o.total)+(o.pump&&o.pump.p==null?' (sin bomba)':''); }
+function curveSvg(pump,h){
+  const pts=pump.curve||[[0,pump.h],[pump.q,0]];
+  const qmax=Math.max.apply(null,pts.map(p=>p[0])), hmax=Math.max.apply(null,pts.map(p=>p[1]));
+  const W=520,H=250,L=48,R=14,T=14,B=40, ym=hmax*1.08;
+  const x=q=>L+q/qmax*(W-L-R), y=hh=>T+(1-hh/ym)*(H-T-B);
+  const Qop=flowAt(pump,h.tdh);
+  let g='<rect x="'+x(0.4*qmax)+'" y="'+y(0.8*hmax)+'" width="'+(x(0.85*qmax)-x(0.4*qmax))+'" height="'+(y(0.2*hmax)-y(0.8*hmax))+'" fill="var(--leaf)" opacity=".16"/>';
+  for(let k=0;k<=4;k++){ const q=qmax*k/4, hh=hmax*k/4;
+    g+='<line x1="'+x(q)+'" y1="'+T+'" x2="'+x(q)+'" y2="'+(H-B)+'" stroke="var(--line)" stroke-width="1"/><text x="'+x(q)+'" y="'+(H-B+16)+'" text-anchor="middle" font-size="11" fill="var(--muted)">'+nf(q,2)+'</text>';
+    g+='<line x1="'+L+'" y1="'+y(hh)+'" x2="'+(W-R)+'" y2="'+y(hh)+'" stroke="var(--line)" stroke-width="1"/><text x="'+(L-6)+'" y="'+(y(hh)+4)+'" text-anchor="end" font-size="11" fill="var(--muted)">'+nf(hh,0)+'</text>'; }
+  g+='<polyline fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round" points="'+pts.map(p=>x(p[0])+','+y(p[1])).join(' ')+'"/>';
+  if(h.tdh<=ym){ g+='<line x1="'+L+'" y1="'+y(h.tdh)+'" x2="'+(W-R)+'" y2="'+y(h.tdh)+'" stroke="var(--coral)" stroke-width="1.5" stroke-dasharray="5 4"/>'; }
+  if(Qop>0){ g+='<line x1="'+x(Qop)+'" y1="'+y(h.tdh)+'" x2="'+x(Qop)+'" y2="'+(H-B)+'" stroke="var(--coral)" stroke-width="1.5" stroke-dasharray="5 4"/><circle cx="'+x(Qop)+'" cy="'+y(h.tdh)+'" r="7" fill="var(--coral)" stroke="var(--surface)" stroke-width="2"/>'; }
+  g+='<text x="'+((L+W-R)/2)+'" y="'+(H-4)+'" text-anchor="middle" font-size="12" fill="var(--ink)">Caudal (m³/h)</text><text transform="translate(12 '+((T+H-B)/2)+') rotate(-90)" text-anchor="middle" font-size="12" fill="var(--ink)">Altura (m)</text>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Curva de la bomba con el punto de trabajo" style="width:100%;height:auto;max-width:640px">'+g+'</svg>';
+}
+function render(r,i,h){
+  const out=$('out'); if(r.h) h=r.h;
+  if(r.none){ out.innerHTML='<div class="msg">'+esc(r.msg)+'</div>'; LAST=null; return; }
+  const verdictTxt={ok:'La configuración cumple todos los puntos verificados.',warn:'Cumple los puntos calculados. Quedan '+r.nwarn+' puntos para revisar en obra.',bad:'Hay '+r.nbad+' incumplimiento(s). Ajustá los componentes antes de presupuestar.'}[r.verdict];
+  let html='<div class="plate"><div class="plate-h"><h2>'+esc(r.title)+'</h2><span class="mono">'+esc(i.prov)+' · HSP '+nf(h.hsp,2)+' h/día'+(i.season==='inv'?' (invierno)':'')+'</span></div>';
+  const eq=r.kind==='A'?(r.nS*r.nP)+' paneles '+r.panel.brand+' de '+r.panel.w+' W ('+r.nS+' en serie × '+r.nP+' en paralelo)':'los paneles y la bomba AC que indica el kit';
+  if(r.props&&r.props.length>1) html+='<div class="props">'+r.props.map((p,k)=>'<button type="button" class="prop'+(p.o===r?' on':'')+'" data-prop="'+k+'"><span>'+esc(p.label)+'</span><b>'+usd(p.o.total)+'</b></button>').join('')+'</div>';
+  html+='<div class="hero"><div class="hero-t"><div class="hero-k">Tu equipo recomendado</div><div class="hero-v">'+esc(r.title)+'</div><div class="hero-s">con '+esc(eq)+'. Para '+nf(i.vol,0)+' litros por día a '+nf(h.tdh,0)+' m de altura, en '+esc(i.prov)+' ('+nf(h.hsp,1)+' h de sol pico).</div></div><div class="hero-p"><div class="hero-k">Costo estimado</div><div class="hero-n">'+usd(r.total)+'</div><div class="hero-s">ARS '+nf(r.total*FX.ars,0)+(r.unpriced?'<br>más '+r.unpriced+' ítem(s) a cotizar':'')+'</div></div></div>';
+  html+='<div class="sec" style="padding-bottom:8px"><div class="note">'+esc(r.sub)+'</div></div>';
+  html+='<div class="metrics">'+r.metrics.map(m=>'<div class="metric"><div class="k">'+esc(m[0])+'</div><div class="v">'+esc(m[1])+'</div><div class="u">'+esc(m[2])+'</div></div>').join('')+'</div>';
+  if(r.kind==='A'&&flowAt(r.pump,h.tdh)>0) html+='<div class="sec"><h3 style="margin-bottom:8px">Curva de la bomba y punto de trabajo</h3>'+curveSvg(r.pump,h)+'<p class="note">La línea azul es lo que entrega la bomba según la altura. El punto naranja es tu punto de trabajo ('+nf(h.tdh,1)+' m). La zona verde es el tramo intermedio recomendado.'+(r.pump.curve?(r.pump.id==='h1'?'':' Curva parcial de la ficha, interpolada en recta.'):' Curva estimada en recta entre el caudal y la altura máximos; la ficha no publica la curva.')+'</p></div>';
+  if(r.reason) html+='<div class="sec"><div class="note">'+esc(r.reason)+'</div></div>';
+  html+='<div class="sec"><div class="verdict '+r.verdict+'"><span class="chip '+r.verdict+'">'+({ok:'CUMPLE',warn:'REVISAR',bad:'NO CUMPLE'}[r.verdict])+'</span><span>'+verdictTxt+'</span></div>';
+  const descHtml=d=>{ const parts=d.split(/(?<=[.!?])\s+/); const first=parts[0]; const rest=parts.slice(1).join(' ');
+    if(d.length>150&&rest) return '<span class="d">'+esc(first)+'</span><details class="dd"><summary>Ver más</summary><span class="d">'+esc(rest)+'</span></details>';
+    return '<span class="d">'+esc(d)+'</span>'; };
+  const li=c=>'<li><span><span class="chip '+c.s+'">'+STAT[c.s]+'</span></span><span><span class="t">'+esc(c.t)+'</span><br>'+descHtml(c.d)+'<br><span class="r">'+esc(c.r)+'</span></span></li>';
+  const imp=r.checks.filter(c=>c.s==='bad'||c.s==='warn'), okc=r.checks.filter(c=>c.s==='ok'||c.s==='info');
+  if(imp.length) html+='<h3 style="margin:4px 0 8px">Para tener en cuenta ('+imp.length+')</h3><ul class="checks">'+imp.map(li).join('')+'</ul>';
+  if(okc.length) html+='<details class="okd"><summary>Ver los '+okc.length+' puntos que cumplen o son informativos</summary><ul class="checks" style="margin-top:8px">'+okc.map(li).join('')+'</ul></details>';
+  html+='</div>';
+  html+='<div class="sec"><h3 style="margin-bottom:8px">Presupuesto referencial</h3><div class="scroll"><table><thead><tr><th>Ítem</th><th class="n">Cant.</th><th class="n">Unit.</th><th class="n">Subtotal</th></tr></thead><tbody>';
+  r.lines.forEach(l=>{
+    const qt=l.m?nf(l.q,0)+' m':nf(l.q,0);
+    html+='<tr><td>'+esc(l.d)+' <span class="tag">'+({AR:'precio AR',INT:'ref. internacional',EST:'estimado','—':''}[l.tag]||'')+'</span></td><td class="n">'+qt+'</td><td class="n">'+(l.u==null?'a cotizar':usd(l.u,l.u<10?2:0))+'</td><td class="n">'+(l.u==null?'—':usd(l.u*l.q))+'</td></tr>';
+  });
+  html+='</tbody><tfoot><tr><td colspan="3">Total de ítems con precio'+(r.unpriced?' ('+r.unpriced+' a cotizar)':'')+'</td><td class="n">'+usd(r.total)+'</td></tr><tr><td colspan="3" class="note" style="font-weight:400">Equivalente en pesos (ARS '+nf(FX.ars,0)+' por USD)</td><td class="n" style="font-weight:400">ARS '+nf(r.total*FX.ars,0)+'</td></tr></tfoot></table></div>';
+  html+='<p class="note" style="margin-top:8px">Los precios argentinos incluyen IVA según la tienda. Los precios internacionales son referencias de tiendas de Europa y EE.UU. y no incluyen flete ni impuestos locales.</p></div>';
+  html+='<div class="sec"><div class="actions"><button class="btn primary" id="btnPdf" type="button">Descargar PDF</button><a class="btn" id="btnWa" target="_blank" rel="noopener" href="#">Enviar por WhatsApp</a><button class="btn" id="btnCopy" type="button">Copiar resumen</button><button class="btn" id="btnSave" type="button">Guardar cálculo</button></div><div class="note" id="actMsg" style="margin-top:8px"></div></div></div>';
+  if(r.alts&&r.alts.length){
+    html+='<div class="card alt"><h3 style="margin-bottom:6px">Alternativas que también cumplen</h3><div class="scroll"><table><thead><tr><th>Equipo</th><th>Arreglo</th><th class="n">Total</th></tr></thead><tbody>'+r.alts.map(a=>'<tr><td>'+esc(a.title)+'</td><td>'+a.nS+'S × '+a.nP+'P · '+esc(a.panel.name)+'</td><td class="n">'+totalCell(a)+'</td></tr>').join('')+'</tbody></table></div></div>';
+  }
+  html+='<div class="card" id="hist" hidden></div>';
+  out.innerHTML=html;
+  out.querySelectorAll('[data-prop]').forEach(b=>{ b.onclick=()=>render(r.props[+b.dataset.prop].o,i,h); });
+  LAST=r; LASTI=i; LASTH=h; wireActions();
+}
+function summaryText(){
+  const r=LAST,i=LASTI,h=LASTH;
+  const vt={ok:'cumple',warn:'cumple con puntos a revisar',bad:'con incumplimientos'}[r.verdict];
+  return ['*Presupuesto de bombeo solar (referencial)*'].concat(i.cli?['Cliente: '+i.cli]:[],i.obra?['Obra: '+i.obra]:[],i.inst?['Presenta: '+i.inst]:[],['Ubicación: '+i.prov+' · HSP '+nf(h.hsp,2),'Necesidad: '+nf(i.vol,0)+' L/día a '+nf(h.tdh)+' m de CDT',
+    'Equipo: '+r.title+(r.kind==='A'?' + '+r.nS*r.nP+' módulos ('+r.nS+'S x '+r.nP+'P, '+r.panel.name+')':''),
+    'Total de ítems con precio: '+usd(r.total)+(r.unpriced?' ('+r.unpriced+' ítems a cotizar)':''),'Verificación: '+vt,
+    'Precios del 09/11/2026 en USD (ARS '+nf(FX.ars,0)+'). Referenciales, con IVA donde la tienda lo indica. Validez: '+i.valid+' días.']).join('\n');
+}
+function waHref(){
+  const num=($('wa').value||'').replace(/\D/g,'');
+  return 'https://wa.me/'+num+'?text='+encodeURIComponent(summaryText());
+}
+let DL;
+function getDownloads(){
+  if(DL===undefined){ DL=(window.claude&&window.claude.use?window.claude.use('downloads').catch(()=>null):Promise.resolve(null)); }
+  return DL;
+}
+const HIDS=['prov','season','vol','qt','hspManual','st','dh','horiz','diam','dist','ctrl','water','over','tmin','auton','chw','pf','arsr','wa','cli','obra','inst','valid'];
+const HKEY='bombeo_solar_hist_v1';
+function histGet(){ try{ const v=JSON.parse(localStorage.getItem(HKEY)||'[]'); return Array.isArray(v)?v:[]; }catch(e){ return null; } }
+function histPut(l){ try{ localStorage.setItem(HKEY,JSON.stringify(l)); return true; }catch(e){ return false; } }
+function renderHist(){
+  const box=$('hist'); if(!box) return; const l=histGet();
+  if(l===null||(!l.length&&false)){ box.hidden=true; return; }
+  if(!l.length){ box.hidden=true; return; }
+  box.hidden=false;
+  box.innerHTML='<h2>Cálculos guardados</h2><p class="note">Se guardan solo en este navegador y este dispositivo.</p><div class="scroll"><table><thead><tr><th>Fecha</th><th>Proyecto</th><th class="n">Total</th><th></th></tr></thead><tbody>'+l.map((e,k)=>'<tr><td>'+esc(e.d)+'</td><td>'+esc(e.n)+'</td><td class="n">'+usd(e.t)+'</td><td class="n"><button class="btn" type="button" data-hl="'+k+'">Abrir</button> <button class="btn" type="button" data-hd="'+k+'">Borrar</button></td></tr>').join('')+'</tbody></table></div>';
+  box.querySelectorAll('[data-hl]').forEach(b=>b.onclick=()=>{ const e=histGet()[+b.dataset.hl]; if(!e) return; HIDS.forEach(id=>{ if(e.v[id]!=null&&$(id)) $(id).value=e.v[id]; }); $('manual').checked=false; $('manualBox').hidden=true; $('prov').dispatchEvent(new Event('input',{bubbles:true})); run(); window.scrollTo({top:0,behavior:'smooth'}); });
+  box.querySelectorAll('[data-hd]').forEach(b=>b.onclick=()=>{ const l2=histGet(); l2.splice(+b.dataset.hd,1); histPut(l2); renderHist(); });
+}
+function wireActions(){
+  const sv=$('btnSave');
+  if(sv){ if(histGet()===null){ sv.hidden=true; } else sv.onclick=()=>{ const l=histGet()||[]; const v={}; HIDS.forEach(id=>{ if($(id)) v[id]=$(id).value; });
+    const nm=(LASTI.cli||LASTI.obra||LASTI.prov)+' · '+nf(LASTI.vol,0)+' L/día';
+    l.unshift({d:new Date().toLocaleDateString('es-AR'),n:nm,t:LAST.total,v:v}); l.length=Math.min(l.length,10);
+    $('actMsg').textContent=histPut(l)?'Cálculo guardado en este navegador.':'No se pudo guardar en este navegador.'; renderHist(); }; }
+  renderHist();
+  $('btnWa').href=waHref();
+  $('btnCopy').onclick=async()=>{
+    const t=summaryText();
+    try{ await navigator.clipboard.writeText(t); $('actMsg').textContent='Resumen copiado.'; }
+    catch(e){ const ta=document.createElement('textarea'); ta.value=t; ta.style.width='100%'; ta.rows=8; $('actMsg').textContent=''; $('actMsg').appendChild(ta); ta.select(); }
+  };
+  $('btnPdf').onclick=savePdf;
+  getDownloads().then(d=>{ const b=$('btnPdf'); if(!d&&b){ b.disabled=true; $('actMsg').textContent='La descarga de PDF no está disponible en esta vista. Usá WhatsApp o copiá el resumen.'; }});
+}
+async function savePdf(){
+  const msg=$('actMsg'); const r=LAST,i=LASTI,h=LASTH;
+  try{
+    const d=await getDownloads(); if(!d){ msg.textContent='La descarga no está disponible en esta vista.'; return; }
+    if(!window.jspdf){ msg.textContent='No se pudo cargar el generador de PDF.'; return; }
+    const doc=new window.jspdf.jsPDF({unit:'mm',format:'a4'});
+    const safe=s=>String(s).replace(/≤/g,'<=').replace(/≥/g,'>=').replace(/η/g,'eta').replace(/Ω/g,'ohm').replace(/[^\x00-\xFF]/g,'');
+    const _split=doc.splitTextToSize.bind(doc), _text=doc.text.bind(doc);
+    doc.splitTextToSize=(t,w)=>_split(safe(t),w);
+    doc.text=(t,x,y2,o)=>_text(Array.isArray(t)?t.map(safe):safe(t),x,y2,o);
+    let y=16; const W=182;
+    const need=(n)=>{ if(y+n>282){ doc.addPage(); y=16; } };
+    const T=(txt,x,size,style,maxW)=>{ doc.setFont('helvetica',style||'normal'); doc.setFontSize(size||10); const lines=doc.splitTextToSize(String(txt),maxW||W); need(lines.length*(size||10)*0.45+2); doc.text(lines,x,y); y+=lines.length*(size||10)*0.45+1.5; };
+    T('Presupuesto de bombeo solar',14,18,'bold');
+    T('Referencial. Precios relevados el 09/11/2026 en USD (ARS '+nf(FX.ars,0)+' por USD).',14,9);
+    y+=2;
+    if(i.cli||i.obra||i.inst){ T((i.cli?'Cliente: '+i.cli:'')+(i.cli&&i.obra?'   |   ':'')+(i.obra?'Obra: '+i.obra:''),14,10,'bold'); if(i.inst) T('Presenta: '+i.inst,14,10); }
+    T('Fecha: '+new Date().toLocaleDateString('es-AR')+'   |   Validez: '+i.valid+' días',14,10);
+    y+=1;
+    T('Datos de entrada',14,12,'bold');
+    T('Ubicación: '+i.prov+'   |   HSP de diseño: '+nf(h.hsp,2)+' h/día'+(i.season==='inv'?' (invierno)':''),14,10);
+    T('Agua: '+nf(i.vol,0)+' L/día'+(i.qt>0?' (caudal objetivo '+nf(i.qt,2)+' m3/h)':'')+'   |   Nivel dinámico '+nf(i.st,0)+' m, descarga '+nf(i.dh,0)+' m, cañería horizontal '+nf(i.horiz,0)+' m ('+h.diam+' mm)',14,10);
+    T('CDT: '+nf(h.tdh)+' m   |   Controlador: '+(i.ctrl==='cc'?'CC con tanque':'CA/CC con respaldo')+'   |   Agua: '+(i.water==='sucia'?'con partículas o dura':'limpia'),14,10);
+    y+=2;
+    T('Equipo propuesto',14,12,'bold');
+    T(r.title,14,10,'bold'); T(r.sub,14,9);
+    r.metrics.forEach(m=>T(m[0]+': '+m[1]+' '+m[2],14,9));
+    y+=2;
+    T('Presupuesto',14,12,'bold');
+    need(8); doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.text('Ítem',14,y); doc.text('Cant.',130,y,{align:'right'}); doc.text('Unitario',158,y,{align:'right'}); doc.text('Subtotal',196,y,{align:'right'}); y+=2; doc.line(14,y,196,y); y+=4;
+    r.lines.forEach(l=>{
+      const ls=doc.splitTextToSize(l.d,100); need(ls.length*4+2);
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.text(ls,14,y);
+      doc.text(l.m?nf(l.q,0)+' m':nf(l.q,0),130,y,{align:'right'});
+      doc.text(l.u==null?'a cotizar':usd(l.u,l.u<10?2:0),158,y,{align:'right'});
+      doc.text(l.u==null?'-':usd(l.u*l.q),196,y,{align:'right'});
+      y+=ls.length*4+1.5;
+    });
+    doc.line(14,y,196,y); y+=5;
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); need(10);
+    doc.text('Total de ítems con precio'+(r.unpriced?' ('+r.unpriced+' a cotizar)':''),14,y); doc.text(usd(r.total),196,y,{align:'right'}); y+=5;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.text('Equivalente: ARS '+nf(r.total*FX.ars,0),196,y,{align:'right'}); y+=8;
+    T('Verificación de componentes',14,12,'bold');
+    r.checks.forEach(c=>{ T('['+STAT[c.s]+'] '+c.t+': '+c.d+' ('+c.r+')',14,8.5,'normal',W); });
+    y+=3;
+    T('Los precios provienen de tiendas públicas, pueden haber cambiado y no incluyen flete. Los criterios normativos se tomaron de resúmenes de IEC 60364-7-712; la AEA 90364-7-712 no fue consultada. Este documento es una guía técnica y no reemplaza el proyecto de un profesional matriculado.',14,8,'normal',W);
+    const buf=doc.output('arraybuffer');
+    await d.save({filename:'presupuesto-bombeo-solar.pdf',data:buf});
+    msg.textContent='PDF listo.';
+  }catch(e){
+    msg.textContent=(e&&e.code==='declined')?'Cancelaste la descarga.':'No se pudo guardar el PDF'+(e&&e.message?': '+e.message:'.');
+  }
+}
+
+/* ---------- Modo manual ---------- */
+function customPump(){
+  const p=parseCode($('mcode').value);
+  const hint=$('mcodeHint');
+  hint.textContent=p?('Se leyó: '+p.q+' m³/h, '+p.h+' m, '+p.vnom+' V, '+p.pW+' W. Sin precio ni curva: se estima el caudal con una recta.'):'No se reconoce el código. Usá el formato nombre caudal-altura-voltaje-potencia, por ejemplo HD-3SS 1.5-75-36-210.';
+  CUSTOM=p; return p;
+}
+function manualEval(i,h){
+  const v=$('mp').value;
+  if(v.startsWith('k:')){ const kit=KITS.find(k=>k.id===v.slice(2)); return finalize(evalB(i,h,kit)); }
+  const pump=v==='c:custom'?customPump():PUMPS.find(p=>p.id===v.slice(2));
+  if(!pump) return {none:true,msg:'No se reconoce el código de la bomba. Usá el formato nombre caudal-altura-voltaje-potencia, por ejemplo HD-3SS 1.5-75-36-210.'};
+  const panel=PANELS.find(p=>p.id===$('mpanel').value);
+  const nS=Math.max(1,parseInt($('mnS').value)||1), nP=Math.max(1,parseInt($('mnP').value)||1);
+  return finalize(evalA(i,h,pump,panel,nS,nP));
+}
+function syncManualFields(){
+  const v=$('mp').value; $('mpvBox').hidden=v.startsWith('k:'); $('mcodeBox').hidden=(v!=='c:custom');
+  if(v==='c:custom') customPump();
+}
+function prefillManual(){
+  const v=$('mp').value; if(v.startsWith('k:')) return;
+  const i=readInputs(); const pump=v==='c:custom'?customPump():PUMPS.find(p=>p.id===v.slice(2)); if(!pump) return;
+  const panel=PANELS.find(p=>p.id===$('mpanel').value);
+  const c=configA(pump,panel,i); if(c){ $('mnS').value=c.nS; $('mnP').value=c.nP; }
+}
+
+/* ---------- Ejecución ---------- */
+function run(){
+  const i=readInputs();
+  const h=hyd(i);
+  if(!(i.vol>0)||!(h.hsp>0)){
+    $('out').innerHTML='<div class="msg">'+(i.reg||i.hspManual>0?'Completá el agua necesaria por día.':'Para una ubicación fuera de la tabla, ingresá las horas sol pico en su campo. Podés consultarlo en Global Solar Atlas o NASA POWER (pestaña Método y normas).')+'</div>';
+    LAST=null; return;
+  }
+  const r=$('manual').checked?manualEval(i,h):auto(i,h);
+  render(r,i,h);
+}
+let T0; const defer=()=>{ clearTimeout(T0); T0=setTimeout(run,120); };
+
+/* ---------- Pestañas Precios y Fuentes ---------- */
+function link(u,t){ return u?'<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(t||'ver')+'</a>':'—'; }
+function renderDB(){
+  let h='';
+  h+='<div class="card"><h2>Bombas solares sumergibles ('+PUMPS.length+')</h2><p class="note">Catálogo completo de Enertik Argentina en bombas solares sumergibles (marcas Mizu y Enertik), con precios con IVA en pesos convertidos a dólares con la cotización de la calculadora. La Handuro no tiene precio verificado. Las filas con stock agotado no se proponen en la selección automática.</p><div class="scroll"><table><thead><tr><th>Modelo</th><th>Tipo</th><th class="n">Pot.</th><th class="n">Tensión</th><th class="n">Caudal máx.</th><th class="n">Altura máx.</th><th>Ventana FV</th><th class="n">ARS</th><th class="n">USD</th><th>Dato</th><th>Fuente</th></tr></thead><tbody>'+
+   PUMPS.map(p=>'<tr><td>'+esc(p.brand+' '+p.model)+(p.curve?'<br><span class="tag">curva H-Q '+(p.id==='h1'?'de la ficha':'de la ficha (parcial)')+'</span>':'')+'</td><td>'+esc(p.kind)+'</td><td class="n">'+p.pW+' W</td><td class="n">'+p.vnom+' V</td><td class="n">'+p.q+' m³/h</td><td class="n">'+p.h+' m</td><td>'+(p.win?p.win.vmin+' a '+p.win.vmax+' V; mín. '+p.minS+' W':'no publicada')+'</td><td class="n">'+(p.p!=null?nf(p.p,0):'—')+'</td><td class="n">'+(p.p!=null?usd(pumpUsd(p)):'a cotizar')+'</td><td>'+esc(p.stock)+', '+esc(p.age)+'<br><span class="tag">confianza '+CONFTXT[p.conf]+'</span></td><td>'+(p.url?link(p.url):'ficha propia')+'</td></tr>').join('')+'</tbody></table></div></div>';
+  const accRows=(L)=>L.map(a=>'<tr><td>'+esc(a[0])+'</td><td class="n">'+nf(a[1],0)+'</td><td class="n">'+usd(a[1]/FX.ars,2)+'</td><td>'+esc(a[2])+'</td><td>'+link(EN+(a.length>4?'':'')+(PARTS.indexOf(a)>=0?'partes-de-repuesto/':'')+a[3]+'/')+'</td></tr>').join('');
+  h+='<div class="card"><h2>Accesorios para bombas Mizu ('+ACC.length+')</h2><div class="scroll"><table><thead><tr><th>Producto</th><th class="n">ARS</th><th class="n">USD</th><th>Stock</th><th>Fuente</th></tr></thead><tbody>'+accRows(ACC)+'</tbody></table></div></div>';
+  h+='<div class="card"><h2>Repuestos para bombas Mizu ('+PARTS.length+')</h2><div class="scroll"><table><thead><tr><th>Producto</th><th class="n">ARS</th><th class="n">USD</th><th>Stock</th><th>Fuente</th></tr></thead><tbody>'+accRows(PARTS)+'</tbody></table></div><p class="note" style="margin-top:8px">Listado de Enertik del 09/11/2026: 49 productos en la categoría Bombas Solares (18 bombas, 4 accesorios y 27 repuestos). Los precios y el stock cambian seguido, incluso de un día para otro.</p></div>';
+  h+='<div class="card"><h2>Kits de variador solar con paneles (bomba AC aparte)</h2><p class="note">ADN Solar, marca Renogen. Las publicaciones tienen fechas y precios dispares; la confianza refleja eso.</p><div class="scroll"><table><thead><tr><th>Kit</th><th>Fase</th><th class="n">Wp nominales</th><th>Entrada solar</th><th class="n">ARS</th><th class="n">USD</th><th>Dato</th><th>Fuente</th></tr></thead><tbody>'+
+   KITS.map(k=>'<tr><td>'+esc(k.name)+'</td><td>'+k.ph+'</td><td class="n">'+(k.solar!=null?nf(k.solar,0):'sin dato')+'</td><td>'+k.win[0]+' a '+k.win[1]+' V</td><td class="n">'+nf(k.p,0)+'</td><td class="n">'+usd(kitUsd(k))+'</td><td>'+esc(k.stock)+', '+esc(k.age)+'<br><span class="tag">confianza '+CONFTXT[k.conf]+'</span></td><td>'+link(k.url)+'</td></tr>').join('')+'</tbody></table></div></div>';
+  h+='<div class="card"><h2>Módulos fotovoltaicos ('+PANELS.length+')</h2><p class="note">Paneles individuales de Enertik Argentina con los datos eléctricos de cada ficha. Se excluyeron pallets, paneles flexibles/plegables y cargadores portátiles. El factor de calidad (0,85 a 1,06) pondera la elección automática según tecnología, garantía de potencia y doble vidrio; es un criterio de la app, no de la tienda.</p><div class="scroll"><table><thead><tr><th>Módulo</th><th>Tecnología</th><th class="n">Voc</th><th class="n">Vmp</th><th class="n">Isc</th><th class="n">Imp</th><th class="n">Coef. Voc</th><th class="n">Vmáx</th><th class="n">ARS</th><th class="n">USD</th><th class="n">USD/Wp</th><th class="n">Calidad</th><th>Stock</th><th>Fuente</th></tr></thead><tbody>'+
+   PANELS.map(p=>'<tr><td>'+esc(p.brand+' '+p.name)+'</td><td>'+esc(p.tech)+'</td><td class="n">'+p.voc+'</td><td class="n">'+p.vmp+'</td><td class="n">'+p.isc+'</td><td class="n">'+p.imp+'</td><td class="n">'+p.tcV+' %/°C</td><td class="n">'+p.vsys+' V</td><td class="n">'+nf(p.p,0)+'</td><td class="n">'+usd(p.p/FX.ars)+'</td><td class="n">'+nf(p.p/FX.ars/p.w,2)+'</td><td class="n">'+p.q+'</td><td>'+esc(p.stock)+'</td><td>'+link(p.url)+'</td></tr>').join('')+'</tbody></table></div><p class="note" style="margin-top:8px">Las fichas de la tienda no rotulan las condiciones de ensayo (STC); se tomaron como STC. Garantía de producto: 1 año.</p></div>'+
+   '<div class="two">'+
+'<div class="card"><h2>Cables, protecciones y estructura</h2><table><thead><tr><th>Ítem</th><th class="n">USD</th></tr></thead><tbody>'+
+   '<tr><td>Cable fotovoltaico unipolar 2,5 mm², por metro</td><td class="n">'+usd(cableUsd(2.5),2)+'</td></tr><tr><td>Cable fotovoltaico unipolar 4 mm², por metro</td><td class="n">'+usd(cableUsd(4),2)+'</td></tr><tr><td>Cable fotovoltaico unipolar 6 mm², por metro</td><td class="n">'+usd(cableUsd(6),2)+'</td></tr><tr><td>Descargador de sobretensión DC 1000 Vcc 2P 20/40 kA</td><td class="n">'+usd(SPD_ARS/FX.ars,2)+'</td></tr><tr><td>Fusible gPV 10x38 mm 1000 Vcc 15 A</td><td class="n">'+usd(FUSE_ARS/FX.ars,2)+'</td></tr><tr><td>Portafusible gPV 1000 Vcc</td><td class="n">'+usd(HOLD_ARS/FX.ars,2)+'</td></tr>'+
+   '<tr><td>Cable 10, 16, 25 y 35 mm², por metro (estimado)</td><td class="n">'+usd(cableUsd(10),2)+' · '+usd(cableUsd(16),2)+' · '+usd(cableUsd(25),2)+' · '+usd(cableUsd(35),2)+'</td></tr>'+
+   '<tr><td>Seccionador DC 32 A / 1200 V (IEC 60947-3)</td><td class="n">'+usd(ISO_GBP*FX.gbp,2)+'</td></tr><tr><td>Estructura de montaje por módulo</td><td class="n">'+usd(STRUCT_USD,2)+'</td></tr>'+
+   '<tr><td>Tanque tricapa Rotoplas 600 L</td><td class="n">'+usd(TANK_ARS[600]/FX.ars,0)+'</td></tr><tr><td>Tanque tricapa Rotoplas 1100 L</td><td class="n">'+usd(TANK_ARS[1100]/FX.ars,0)+'</td></tr><tr><td>Caño polietileno K4 1/2", por metro</td><td class="n">'+usd(PIPE_ARS_M[20]/FX.ars,2)+'</td></tr><tr><td>Caño polietileno K4 3/4", por metro</td><td class="n">'+usd(PIPE_ARS_M[25]/FX.ars,2)+'</td></tr><tr><td>Sensor de nivel Mizu</td><td class="n">'+usd(SENSOR_ARS/FX.ars,2)+'</td></tr></tbody></table><p class="note" style="margin-top:8px">Cables, descargador y fusibles: Enertik Argentina (ARS con IVA, 09/11/2026). Las secciones de 10 mm² o más no figuran en la tienda y se estimaron. Seccionador: Voltacon (GBP 26,15, referencia internacional). Estructura: kit de 20 módulos de PES Supply (USD 1.596,43). Tanques (Easy, precio de lista sin el 20% de descuento web) y caño K4 (Easy, rollos de 25 m). El caño K4 soporta unos 40 m de altura; para más altura hay que cotizar otro. Controlador CA/CC, puesta a tierra, accesorios y mano de obra no tienen precio verificado.</p></div></div>';
+  h+='<div class="card"><h2>Precios de referencia sueltos</h2><p class="note">No entran en el cálculo. Sirven para contrastar.</p><div class="scroll"><table><thead><tr><th>Producto</th><th class="n">Precio original</th><th class="n">USD</th><th>Fuente</th></tr></thead><tbody>'+
+   [['Variador de bombeo solar INVT BPD 1,5 kW','EUR',713.40,'https://suministrosdelsol.com/es/144-inversores-para-bombeo-solar'],['Variador de bombeo solar INVT BPD 2,2 kW trifásico','EUR',920.90,'https://suministrosdelsol.com/es/144-inversores-para-bombeo-solar'],['Variador de bombeo solar INVT BPD 4 kW trifásico','EUR',2019.00,'https://suministrosdelsol.com/es/144-inversores-para-bombeo-solar'],['Variador de bombeo solar INVT BPD 5,5 kW trifásico','EUR',2171.00,'https://suministrosdelsol.com/es/144-inversores-para-bombeo-solar'],
+    ['Bomba sumergible Grundfos SP 7','EUR',1609.30,'https://www.wattuneed.com/es/60-bombeo-solar'],['Bomba sumergible Grundfos SP 14','EUR',2217.93,'https://www.wattuneed.com/es/121-pompes-solaire'],['Bomba sumergible Grundfos SP 46','EUR',2461.14,'https://www.wattuneed.com/es/60-bombeo-solar'],
+    ['Kit bomba solar sumergible con 4 paneles de 270 W (Uruguay)','USD',1999,'https://www.sodimac.com.uy/sodimac-uy/product/2613166/Kit-bomba-sumergible-con-4-paneles-solares/2613166']].map(r=>{
+      const usdv=r[1]==='EUR'?r[2]*FX.eur:r[2];
+      return '<tr><td>'+esc(r[0])+'</td><td class="n">'+(r[1]==='EUR'?'EUR ':'USD ')+nf(r[2],2)+'</td><td class="n">'+usd(usdv)+'</td><td>'+link(r[3])+'</td></tr>'; }).join('')+'</tbody></table></div></div>';
+  $('dbOut').innerHTML=h;
+}
+const SRC=[
+ ['Catálogo completo de bombas solares, accesorios y repuestos (09/11/2026)','Enertik Argentina','https://enertik.com/ar/tienda/bombeo-solar/bombas-solares/sumergibles/'],
+ ['Kits de bombeo con variador y paneles','ADN Solar','https://adnsolar.com.ar/categoria-producto/products/solar-kits/kits-solares-para-bombeo-de-agua/'],
+ ['Cotización del dólar: BNA $1.560 el 02/11/2026','El Economista','https://eleconomista.com.ar/economia/dolar-hoy-cuanto-cotiza-lunes-2-noviembre-n99379/amp'],
+ ['Euro: 1 EUR = 1,1380 USD (29/07/2026, último dato hallado)','BOE / Banco de España','https://boe.es/boe/dias/2026/07/30/pdfs/BOE-A-2026-16649.pdf'],
+ ['Criterios de IEC 60364-7-712 (resumen secundario, sin revisión técnica)','NEN-Hub','https://nen.sulerr.com/en/guides/nen-1010/712-pv-solar'],
+ ['HSP por región (rangos orientativos, sin fuente de datos citada)','Solarpool Argentina','https://www.solarpool.com.ar/blog/calcular-sistema-solar-casa-argentina-guia/'],
+ ['Atlas de Energía Solar de la Argentina (mapas, incertidumbre ~10%)','CAI','https://www.cai.org.ar/wp-content/uploads/cursos/2018/eficiencia-energetica/03/Atlas_de_energia_solar_de_la_Argentina.pdf'],
+ ['Cable solar H1Z2Z2-K','Obramat','https://www.obramat.es/fotovoltaica/accesorios-instalacion-solar/cable-solar'],
+ ['Módulos fotovoltaicos (fichas y precios en ARS)','Enertik Argentina','https://enertik.com/ar/categoria/fotovoltaica/paneles-solares/'],
+ ['Kit de estructura de montaje','PES Supply','https://www.portlandiaelectric.supply/collections/550w-solar-panels'],
+ ['Seccionadores DC IEC 60947-3','Voltacon Solar','https://www.voltaconsolar.com/collections/protection-monitoring']
+];
+function renderSrc(){
+  $('srcOut').innerHTML='<div class="card"><h2>Qué se verificó y qué no</h2><div class="two">'+
+   '<div><h3 style="margin-bottom:6px">Criterios de cálculo</h3><ul class="plain"><li>Potencia solar = 1,5 × potencia de la bomba.</li><li>Horas de bombeo = litros por día ÷ caudal por hora, dentro de las HSP.</li><li>Punto de trabajo en un tramo intermedio de la curva.</li><li>Controladores CC y CA/CC, y la necesidad de tanque.</li><li>Vida útil de 10 a 15 años y sus factores.</li><li>Ficha y curva de la Handuro HD-2SS 1.5-75-36-210.</li></ul>'+
+   '<h3 style="margin:10px 0 6px">Leído en tiendas</h3><ul class="plain"><li>Precios, potencia, caudal y altura de las bombas Mizu en Enertik.</li><li>Ventana de tensión (Vmp mín. y Voc máx.) y potencia solar mínima de las 18 bombas, leídas de cada ficha el 09/11/2026.</li><li>Datos eléctricos, precio y stock de 11 módulos fotovoltaicos de Enertik.</li><li>Precios y datos de los kits de ADN Solar.</li><li>Cotizaciones del dólar y del euro.</li><li>Precios de cable, seccionador y estructura.</li></ul></div>'+
+   '<div><h3 style="margin-bottom:6px">Estimado o sin verificar</h3><ul class="plain"><li><strong>Curva de la Handuro</strong>: puntos leídos a ojo de la imagen. La ficha dice 75 m y la gráfica llega a 54 m.</li><li><strong>Caudal de las bombas Mizu</strong>: sin curva numérica. Se supone una recta entre el caudal y la altura máximos.</li><li><strong>Límites del punto de trabajo</strong> (40 a 85% del caudal, 20 a 80% de la altura): son orientativos.</li><li><strong>Radiación (HSP) por región</strong>: rangos de un blog comercial. La app usa el límite inferior. Verificá tu zona en Global Solar Atlas o NASA POWER.</li><li><strong>Factor de invierno 0,69</strong>: sale de dos datos de Buenos Aires y se aplica a todo el país.</li><li><strong>Tucumán, Santiago del Estero y Chubut</strong>: no figuran en la fuente; se asignaron por cercanía.</li><li><strong>Módulos</strong>: las fichas de la tienda no indican las condiciones de ensayo; se tomaron como STC. El factor de calidad de cada módulo es un criterio de la app.</li><li><strong>Cantidad de paneles recomendada</strong>: las fichas Mizu no la indican (dicen que es orientativa). La app la deduce de la ventana de tensión y la potencia solar mínima de cada ficha.</li><li><strong>Curvas de las bombas Mizu</strong>: son solo una imagen en la ficha; no hay valores numéricos.</li><li><strong>Cable hacia la bomba</strong>: precio estimado con cable solar; el fabricante indica el real.</li><li><strong>Normas</strong>: ni la AEA 90364-7-712 ni IEC 62548 se leyeron completas.</li></ul></div></div></div>'+
+   '<div class="card"><h2>Enlaces</h2><div class="scroll"><table><thead><tr><th>Dato</th><th>Origen</th><th>Enlace</th></tr></thead><tbody>'+SRC.map(s=>'<tr><td>'+esc(s[0])+'</td><td>'+esc(s[1])+'</td><td>'+(s[2]?link(s[2],'abrir'):'—')+'</td></tr>').join('')+'</tbody></table></div><p class="note" style="margin-top:8px">Las consultas web se hicieron el 08/11/2026. Algunas páginas de tienda muestran precios con meses de antigüedad; la columna Dato de Precios y modelos lo indica.</p></div>';
+}
+
+
+/* ---------- Fondo animado con el desplazamiento ---------- */
+function initBg(){
+  const sun=$('bgSun'), w1=$('bgW1'), w2=$('bgW2'), bg=$('bg');
+  const still=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const drops=[]; for(let k=0;k<16;k++){ const d=document.createElement('div'); d.className='drop'; bg.appendChild(d);
+    drops.push({el:d,x:Math.random(),y:Math.random(),dp:0.15+Math.random()*0.5,sp:6+Math.random()*10,sc:0.7+Math.random()*0.8}); }
+  let sy=0, t0=performance.now(), raf=0;
+  function frame(now){
+    const vw=window.innerWidth, vh=window.innerHeight;
+    const max=Math.max(1,document.documentElement.scrollHeight-vh);
+    const p=Math.min(1,Math.max(0,sy/max));
+    const t=still?0:(now-t0)/1000;
+    sun.style.transform='translate('+(vw*(0.08+0.72*p))+'px,'+(vh*(0.22-0.16*Math.sin(p*Math.PI))-40)+'px) scale('+(0.9+0.4*Math.sin(p*Math.PI))+')';
+    w1.style.transform='translateY('+((1-p)*18+8)+'vh)';
+    w2.style.transform='translateY('+((1-p)*14+12)+'vh)';
+    const H=vh+40;
+    drops.forEach(d=>{ const y=((d.y*H+sy*d.dp+t*d.sp)%H+H)%H-20; d.el.style.transform='translate('+(d.x*vw)+'px,'+y+'px) scale('+d.sc+')'; });
+    raf=0; if(!still) raf=requestAnimationFrame(frame);
+  }
+  window.addEventListener('scroll',()=>{ sy=window.scrollY||document.documentElement.scrollTop||0; if(still&&!raf) raf=requestAnimationFrame(frame); },{passive:true});
+  window.addEventListener('resize',()=>{ if(still&&!raf) raf=requestAnimationFrame(frame); });
+  raf=requestAnimationFrame(frame);
+}
+
+
+const HELP={vol:'Litros que necesitás por día: consumo de la casa, animales, riego o llenado de tanque. Sumá todos los usos.',
+ qt:'Caudal que debería entregar la bomba mientras trabaja. Si lo dejás vacío se calcula dividiendo el agua diaria por las horas sol pico.',
+ hspManual:'Horas de sol pico: horas por día con una radiación equivalente a 1000 W/m². Vacío = valor típico (conservador) de tu provincia. Para tu zona exacta consultá Global Solar Atlas o NASA POWER.',
+ st:'Distancia vertical desde el suelo hasta el nivel del agua dentro del pozo con la bomba funcionando.',
+ dh:'Altura a la que sube el agua sobre el suelo, por ejemplo hasta la entrada de un tanque elevado.',
+ horiz:'Largo de cañería horizontal entre el pozo y el tanque. Suma pérdidas por fricción.',
+ diam:'Diámetro interno de la cañería. En automático la app elige el menor que mantiene la velocidad hasta 1,5 m/s con pocas pérdidas.',
+ dist:'Distancia entre los paneles y el controlador. Define el grosor del cable.',
+ ctrl:'CC: funciona solo con paneles y necesita tanque de almacenamiento. CA/CC: además admite red o generador de respaldo.',
+ water:'La arena, las partículas y el agua dura desgastan la bomba. Con agua sucia la app recomienda filtro y revisiones más frecuentes.',
+ season:'Promedio anual da el rendimiento típico. Invierno dimensiona para el mes con menos sol, por lo que el equipo resulta más grande.',
+ over:'Cuánta potencia de paneles se instala respecto de la bomba. Lo habitual es 1,5 veces.',
+ tmin:'Temperatura más baja esperable en tu zona. A menos temperatura el panel entrega más voltaje, y ese valor no debe pasar el máximo del controlador.',
+ auton:'Días de consumo que el tanque debe poder almacenar para cubrir la noche y los días nublados.',
+ chw:'Coeficiente de rugosidad de la cañería. 140 sirve para PVC o polietileno nuevos.',
+ pf:'Multiplicador para ajustar los precios de paneles, cables y estructura a tu zona. 1 = precios de lista.',
+ arsr:'Pesos por dólar usados para convertir los precios.'};
+function initHelp(){
+  Object.keys(HELP).forEach(id=>{
+    const lab=document.querySelector('label[for="'+id+'"]'); if(!lab) return;
+    const b=document.createElement('button'); b.type='button'; b.className='qm'; b.textContent='?'; b.setAttribute('aria-label','Ayuda: '+lab.textContent.trim()); b.setAttribute('aria-expanded','false');
+    lab.appendChild(b);
+    let box=null;
+    b.addEventListener('click',e=>{ e.preventDefault(); e.stopPropagation();
+      if(box){ box.remove(); box=null; b.setAttribute('aria-expanded','false'); return; }
+      box=document.createElement('div'); box.className='helpbox'; box.textContent=HELP[id]; lab.parentNode.appendChild(box); b.setAttribute('aria-expanded','true'); });
+  });
+}
+
+/* ---------- Inicio ---------- */
+function init(){
+  $('prov').innerHTML=PROV.map((p,ix)=>'<option value="'+ix+'">'+esc(p[0])+'</option>').join('');
+  $('prov').value='0';
+  const opt=PUMPS.map(p=>'<option value="p:'+p.id+'">'+esc(p.brand+' '+p.model)+(p.stock==='agotado'?' (agotado)':'')+'</option>').join('');
+  const optK=KITS.map(k=>'<option value="k:'+k.id+'">'+esc(k.name)+'</option>').join('');
+  $('mp').innerHTML='<optgroup label="Bomba DC con controlador">'+opt+'</optgroup><optgroup label="Variador solar + bomba AC">'+optK+'</optgroup><optgroup label="Otra"><option value="c:custom">Bomba propia (ingresar código)</option></optgroup>';
+  $('mpanel').innerHTML=PANELS.map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join('');
+  $('mpanel').value='am440'; $('mp').value='p:h1';
+  const hint=()=>{ const p=PROV[+$('prov').value]; $('provHint').textContent=p[1]?(REGIONS[p[1]].n+': '+REGIONS[p[1]].lo.toString().replace('.',',')+' a '+REGIONS[p[1]].hi.toString().replace('.',',')+' HSP; se usa '+REGIONS[p[1]].lo.toString().replace('.',',')+(p[2]?'. Región asignada por cercanía.':'')):'Sin dato en la tabla. Ingresá las horas sol pico en su campo.'; };
+  let tminTouched=false;
+  const setTmin=()=>{ if(tminTouched) return; const p=PROV[+$('prov').value]; $('tmin').value=(p&&p[1]&&TMIN[p[1]]!=null)?TMIN[p[1]]:0; };
+  hint(); setTmin();
+  $('form').addEventListener('input',e=>{
+    if(e.target.id==='tmin') tminTouched=true;
+    if(e.target.id==='prov'){ hint(); setTmin(); }
+    if(e.target.id==='arsr'){ FX.ars=Math.max(1,parseFloat(e.target.value)||1560); $('stampFx').textContent=nf(FX.ars,0); renderDB(); }
+    if(e.target.id==='mp'){ syncManualFields(); prefillManual(); }
+    if(e.target.id==='mpanel'||e.target.id==='mcode') prefillManual();
+    defer();
+  });
+  $('manual').addEventListener('change',()=>{ $('manualBox').hidden=!$('manual').checked; if($('manual').checked){ syncManualFields(); prefillManual(); } run(); });
+  $('wa').addEventListener('input',()=>{ if(LAST&&$('btnWa')) $('btnWa').href=waHref(); });
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b?'true':'false'));
+    ['calc','db','know','src'].forEach(t=>{ $('pane-'+t).hidden=(t!==b.dataset.tab); });
+  }));
+  renderDB(); renderSrc(); run(); try{ initHelp(); }catch(e){} try{ initBg(); }catch(e){}
+}
+init();
+})();
+</script>
+
+</body></html>
